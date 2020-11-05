@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>后台登录-X-admin2.2</title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/xadmin.css">
+    <link rel="stylesheet" href="../css/menuTree.css">
+    <script type="text/javascript" src="../js/jquery-3.4.1.js"></script>
+    <script type="text/javascript" src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/xadmin.js"></script>
+   <!-- <script type="text/javascript" src="../js/menuTree.js"></script>-->
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script>
+        // 是否开启刷新记忆tab功能
+        // var is_remember = false;
+    </script>
+</head>
+    <body>
+        <div class="layui-row layui-col-space15">
+            <!--菜单树 -->
+            <div class="layui-col-md4">
+                <div class="layui-card">
+                    <div class="layui-card-header">资源分类管理</div>
+                    <div class="layui-card-body">
+                        <div  class="demo-tree demo-tree-box" style="height: 650px; overflow-x: scroll;">
+                            <div id="menuTree"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 操作表单 -->
+            <div class="layui-col-md8">
+                <div class="layui-card">
+                    <div class="layui-card-header">操作表单</div>
+                    <div class="layui-card-body">
+                        <form id="menuForm" action="/item/editSysmenu" method ="post" target="frameName" class="layui-form layui-form-pane"><!---->
+                            <input type="text" id="sysId" name="sysId" class="layui-input" ><!--当前节点sysId-->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">上级类目</label>
+                                <div class="layui-input-block">
+                                    <input type="text" id="parentName" name="parentName" autocomplete="off" placeholder="上级类目"
+                                           class="layui-input" readonly="readonly" disabled="disabled">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">类目名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" id="menuName" name="menuName" autocomplete="off" placeholder="类目名称" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">类目顺序</label>
+                                <div class="layui-input-block">
+                                    <input type="text" id="sortOrder" name="sortOrder" autocomplete="off" placeholder="类目顺序" class="layui-input">
+                                </div>
+                            </div>
+                            <!-- 隐藏域 -->
+                            <!--<input type="text" name="menuId" hidden="hidden"/>
+                            <input type="text" name="menuParentId" hidden="hidden"/>
+                            <input type="text" name="createTime" hidden="hidden"/>
+                            <input type="text" name="updateTime" hidden="hidden"/>-->
+                            <!-- treeId，用于更新HTML-->
+                            <!--<input type="text" name="treeId" hidden="hidden"/>-->
+
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <!--<a class="layui-btn" onclick="menuFormSave()">保存</a>-->
+                                    <input id= "refresh" class="layui-btn" type="submit" name="submit" value="保存"/>
+                                </div>
+                            </div>
+                        </form>
+                        <iframe id="id_iframe" name="frameName" style="display:none;"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+<script type="text/javascript" >
+    $(document).ready(function(){
+        //递归   自己调自己
+        $.ajax({
+            url: '/item/sysMenuList',
+            type: 'POST',
+            success: function (result) {
+                let dataList = result.data;
+                /*声明一个函数*/
+                function tree(dataList) {
+                    let str = "<ul class=l_tree>";
+                    for (let i = 0; i < dataList.length; i++) {
+                        if(dataList[i].url==""||dataList[i].url==null){
+                            dataList[i].url="#";
+                        }
+                        str += '<li class="l_tree_branch" d="'+ dataList[i].sysId +'"><span>-</span>' +
+                                '<a id="edit" href="#">'+ dataList[i].menuName + '</a>&nbsp;&nbsp;' +
+                                '&nbsp;&nbsp;<a id="add"  href="#"><i class="iconfont">&#xe6b9;</i></a>'+
+                                '&nbsp;&nbsp;<a id="del" href="#"><i class="iconfont">&#xe69d;</i></a>'
+
+                        if (dataList[i].childMenus) {
+                            str += tree(dataList[i].childMenus);
+                        }
+                        str += "</li>";
+                    }
+                    str += "</ul>";
+                    return str;
+                }
+                $("#menuTree").html(tree(dataList));
+                //alert(tree(dataList));
+                //点击菜单收缩展开
+                $("#menuTree ul li span").click(function(event){
+                    //event.stopPropagation(); //阻止 click 事件冒泡到父元素：
+                    if($(this).parent().find("ul").is(":visible")){
+                        //隐藏
+                        $(this).parent().find("ul").hide();
+                        $(this).html("-");
+                    }else {
+                        //显示
+                        $(this).parent().find("ul").show();
+                        $(this).html("+");
+                    }
+                });
+
+                //点击添加菜单
+                $("#menuTree ul li #add").click(function(event){
+                    //添加菜单功能是否有必要，添加了子菜单后需要将该菜单上的utl链接移动到子菜单，否则该子菜单不会遍历。
+                    let parentId =  $(this).parent().attr('d');  /*获取当前菜单id作为待添加菜单的父id*/
+                    $.post("/item/addSysMenu",{parentId:parentId,menuName:"未命名"},function(result){
+                        window.location.reload(); /*刷新当前页面*/
+                    });
+                });
+                //点击删除菜单
+                $("#menuTree ul li #del").click(function(event){
+                    layer.alert("当前功能待确定")/*当前菜单utl为空同时不含子菜单方可删除*/
+                    let sysId =  $(this).parent().attr('d');  /*获取当前菜单的id*/
+                    $.post("/item/xxxxxxxxxxxxx",{sysId:sysId},function(result){
+                        window.location.reload(); /*刷新当前页面*/
+                    });
+                });
+                //点击编辑菜单(菜单回显)
+                $("#menuTree ul li #edit").click(function(event){
+                    let sysId =  $(this).parent().attr('d');  /*获取当前菜单的id*/
+                    let parentName = $(this).parent().parent().parent().children("#edit").html(); /*当前菜单父菜单name*/
+                    let menuName = $(this).html(); /*当前菜单name*/
+                    $("#sysId").val(sysId);
+                    $("#parentName").val(parentName);
+                    $("#menuName").val(menuName);
+                });
+            }
+        })
+            $("#refresh").click(function(){
+                setTimeout(function () {
+                    window.location.reload(); /*刷新当前页面*/
+                },100);
+            })
+    })
+</script>
+
+</body>
+</html>

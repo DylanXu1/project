@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html  lang="zh-CN">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="renderer" content="webkit"> 
+	<meta http-equiv="Cache-Control" content="no-transform"> <!-- for baidu -->
+    <meta name="MobileOptimized" content="width"><!-- for baidu -->
+    <meta name="HandheldFriendly" content="true"><!-- for baidu -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">	
+	<title>首页</title>
+	<link rel="stylesheet" href="./css/font.css">
+	<link rel="stylesheet" href="./css/xadmin.css">
+	<link rel="stylesheet" href="./css/herder.css" charset="utf-8">
+	<link rel="stylesheet" href="./css/index.css" charset="utf-8">
+	<script type="text/javascript" src="./js/jquery-3.4.1.js"></script>
+	<script type="text/javascript" src="./js/common.js"></script>
+</head>
+
+<body class="br">
+	<div id="header"></div>
+	<!--首页广告图片 -->
+	<div class="board">
+		<img src="images/slogan_1.png"/>
+	</div>
+	
+	<!--正文部分 -->
+		
+	<div class="body">
+		<div class="bleft">
+			<div class="leftt" >分类列表</div>
+			<div id="lists"class="lists"></div>
+		</div>
+
+		<div class="bright">
+			<div class="inrow_title"><span>精选和推荐</span></div>
+			<div class="inrow0"><img src="images/bleft.png" href='javascript:' id="left"/></div>
+			<a href="detail.html" id="index_one"><!---->
+				<div class="inrow1"><img id="mainImg" class="img" src=""/></div>
+				<div class="inrow2">
+					<div class="block1"><p id="title"><!--标题--></p></div>
+					<div class="block2"><!--4图列表--></div>
+					<div class="block3">
+						<p>现已推出</p>
+						<p>热销商品</p><br/>
+						<p id="price">￥</p>
+					</div>
+				</div>
+			</a>
+			<div class="inrow0"><img src="images/bright.png" href='javascript:' id="right"/></div>
+			<div class="bb_bar"></div>
+		</div>
+
+		<div class="bright2">
+			<div class="block_title"><span>特别优惠</span></div>
+			<div class="inrow0"><img src="images/bleft.png" id="left2"/></div>
+			<div class="focus_flex" id="siximg">
+				<!--6图列表-->
+				<!--<div class="ma"><a href="#" id="sixpic"><img id="siximg" src="image/car.png"/></a></div>-->
+			</div>
+			<div class="inrow0"><img src="images/bright.png" id="right2"/></div>
+		</div>
+
+		<div class="bright2">
+			<div style="height: 50px;"><!--空行--></div>
+			<div class="mainlist">
+				<div class="mainlist_title">新品与热门商品</div>
+				<div class="mainlist_title">热销商品</div>
+			</div>	
+		</div>
+		<div id = "bright2_bar" class="bright2"><!--数据条--></div>
+
+	</div>
+	<div class="foot">
+		<div id="footer"></div>
+	</div>
+
+
+<script type="text/javascript" >
+	/*加载页头页尾*/
+	$(function() {
+		$('#header').load('header.html');
+		$('#footer').load('footer.html');
+	})
+
+	/*左侧菜单*/
+	$(document).ready(function(){
+		//递归 自己调自己
+		$.ajax({
+			url: '/item/sysMenuList',
+			type: 'POST',
+			success: function (result) {
+				let dataList = result.data;
+				/*声明一个函数*/
+				function tree(dataList) {
+					let str = "<ul class=l_tree>";
+					for (let i = 0; i < dataList.length; i++) {
+						if(dataList[i].url==""||dataList[i].url==null){
+							dataList[i].url="#";
+						}
+						str += '<li class="l_tree_branch"><span class="layui-icon">&#xe623;</span><a href='+ dataList[i].url +'>'+ dataList[i].menuName+'</a>';
+						if (dataList[i].childMenus) {
+							str += tree(dataList[i].childMenus);
+						}
+						str += "</li>";
+					}
+					str += "</ul>";
+					return str;
+				}
+				$("#lists").html(tree(dataList));
+
+				//点击菜单收缩展开
+				$("#lists ul li").click(function(event){
+					event.stopPropagation(); //阻止 click 事件冒泡到父元素：
+					if($(this).find("ul").is(":visible")){
+						//隐藏
+						$(this).find("ul").hide();
+						$(this).find("span").html("&#xe623;"+" ");
+					}else {
+						//显示
+						$(this).find("ul").show();
+						$(this).find("span").html('&#xe625;'+" ");
+					}
+				});
+			}
+		})
+	})
+
+	/*首页模块一*/
+	$(document).ready(function(){
+		let num=0;
+		$.ajax({
+			url: 'item/itemList',
+			type: 'POST',
+			success: function (result) {
+				let dataList = result.data;
+				modelome(); /*调用点击前的函数*/
+
+				/*将点击前的交互放在函数里*/
+				function modelome() {
+					let imgList = dataList[num].image;
+					let itemId = dataList[num].itemId;
+					$("#index_one").attr("href","detail.html?itemId="+dataList[num].itemId); /*动态链接*/
+					$("#mainImg").attr("src","image/"+itemId+"/"+dataList[num].imgMain);/*给标签属性src赋值*/
+					$("#title").html(dataList[num].title);  /*将值赋值到页面*/
+					$("#price").html("￥"+dataList[num].price);
+					let picList = "";
+					for(let i=0; i<4 ; i++){  /*只遍历4张图片*/
+						picList += "<div class=\"aa\"><img id=\"hover \" src=\"image/"+itemId +"/"+ imgList[i].imgAdd +"\"/></div>"
+					}
+					//alert(picList);
+					$(".block2").html(picList); /*将4个副图赋值给页面*/
+					/*鼠标悬浮事件*/
+					$(".aa img").mouseover(function () {
+						let va = $(this).attr('src');  /*获取当前标签的属性值*/
+						$("#mainImg").attr("src",va);  /*将当前标签的属性值src赋值给主图片*/
+					});
+				}
+
+				/*自动切换,鼠标悬浮时停止*/
+				let tabTimer
+				$("#index_one").hover(function() {
+					clearInterval(tabTimer);
+				},function(){
+					tabTimer = setInterval(function() {
+						num++
+						if (num == dataList.length) {
+							num = 0;
+						}
+						modelome(); /*调用点击前的函数*/
+					},5000);
+				}).trigger("mouseleave");  /*先触发鼠标离开，否则不会自动执行tabTimer函数*/
+
+				/*点击左边*/
+				$("#left").click(function() {
+					num--;
+					//alert(num);
+					if (num == -1) {
+						num = dataList.length - 1;
+					}
+					modelome(); /*调用点击前的函数*/
+				})
+
+				/*点击右边*/
+				$("#right").click(function() {
+					num++;
+					//alert(num);
+					if (num == dataList.length) {
+						num = 0;
+					}
+					modelome(); /*调用点击前的函数*/
+				})
+			}
+		})
+	})
+
+	/*首页六图列表*/
+	$(document).ready(function() {
+		$.ajax({
+			url: 'item/itemList',
+			type: 'POST',
+			success: function (result) {
+				let dataList = result.data;
+				let x =0;
+				beforclick();  /*调用点击前的函数*/
+
+				//点击之前
+				function beforclick() {
+					let mainImgList ="";
+					for (let i = x; i <dataList.length; i++) {
+						mainImgList += "<div class=\"ma\"><a href=\"detail.html?itemId="+dataList[i].itemId+"\" id=\"sixpic\">" +
+								"<img src=\"image/"+dataList[i].itemId+ "/" + dataList[i].imgMain + "\"/></a></div>"; /*给6图列表赋值*/
+					}
+					$("#siximg").html(mainImgList);/*给6图列表的src赋值*/
+				}
+
+				/*点击左边*/
+				$("#left2").click(function() {
+					x=x-6;
+					if (x <0) {
+						x = dataList.length - 6;
+					}
+					$("#siximg").html(""); /*清空列表*/
+					beforclick();			/*再次渲染*/
+				})
+
+				/*点击右边*/
+				$("#right2").click(function() {
+					x= x+6;
+					if (x>= dataList.length) {
+						x=0;
+					}
+					$("#siximg").html("");
+					beforclick();
+				})
+			}
+		})
+	})
+
+	/*首页条形列表模块*/
+	$(document).ready(function(){
+		let html = "";
+		$.ajax({
+			url: 'item/itemList',
+			type: 'POST',
+			success: function (result) {
+				let dataList = result.data;
+				for (let i in dataList) {
+					let discount = (dataList[i].price-dataList[i].originalPrice)/dataList[i].originalPrice;
+					let dis = discount.toFixed(2)*100 + "%";
+					//alert(dis);
+					html +=   /*给条形列表赋值*/
+					"<div class=\"bar\">" +
+						"<a href='detail.html?itemId="+dataList[i].itemId+"'>"	+
+						"<div class=\"mainlist_bar\">" +
+							"<div class=\"bar_pic\"><img src=\"image/"+ dataList[i].itemId +"/"+ dataList[i].imgMain +"\"/></div>" +
+							"<div class=\"bar_tex\">" +
+								"<div class=\"tex1\">"+ dataList[i].title +"</div>"  +
+								"<div class=\"tex2\">实用工具，休闲，动画制作和建模，模拟</div>"  +
+							"</div>"  +
+							"<div class=\"bar_pri_1\"><span >"+ dis +"</span></div>"  +
+							"<div class=\"bar_pri_2\"><span>￥"+ dataList[i].price +"</span></div>"  +
+						"</div>"  +
+						"</a>"  +
+						"<div class=\"empty\"></div>"  +
+					"</div>"
+				}
+				$("#bright2_bar").html(html);
+
+				/*鼠标悬浮事件*/
+				$(".mainlist_bar").mouseover(function () {
+					$(this).css('background','#A1C6DC');  /*获得焦点颜色*/
+					$(this).find(".tex1").css('color','#000000');  /*选取当前元素下的tex1元素*/
+				});
+				$(".mainlist_bar").mouseout(function () {
+					$(this).css('background','#21384A');  /*失去焦点颜色*/
+					$(this).find(".tex1").css('color','#C4C4C4');
+				});
+
+			}
+		})
+	})
+
+
+</script>
+
+			
+</body>
+</html>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chains.project.mapper.SmsMapper">
+    <resultMap type="com.chains.project.model.vo.SmsVo" id="SmsvoMap">
+        <id property="id" column="id" />
+        <id property="phone" column="phone" />
+        <id property="password" column="password" />
+        <id property="code" column="code" />
+        <id property="min" column="min" />
+    </resultMap>
+    <resultMap type="com.chains.project.model.pojo.User" id="userMap">
+        <id column="user_id" property="userId" />
+        <result column="phone" property="phone" />
+        <result column="user_kind" property="userKind" />
+        <result column="user_Type" property="userType" />
+        <result column="user_name" property="userName" />
+        <result column="org_name" property="orgName" />
+        <result column="tname" property="tname" />
+        <result column="sname" property="sname" />
+        <result column="functionary" property="functionary" />
+        <result column="sex" property="sex" />
+        <result column="email" property="email" />
+        <result column="identity" property="identity" />
+        <result column="age" property="age" />
+        <result column="password" property="password" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="is_delete" property="isDelete" />
+        <result column="user_num" property="userNum" />
+    </resultMap>
+    <resultMap type="com.chains.project.model.vo.OrgVo" id="orgMap">
+        <id column="org_id" property="orgId" />
+        <result column="user_id" property="userId" />
+        <result column="phone" property="phone" />
+        <result column="org_name" property="orgName" />
+        <result column="user_kind" property="userKind" />
+        <result column="user_type" property="userType" />
+        <result column="functionary" property="functionary" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="is_delete" property="isDelete" />
+    </resultMap>
+    <resultMap type="com.chains.project.model.pojo.Teacher" id="teacherMap">
+        <id column="teacher_id" property="teacherId" />
+        <result column="org_id" property="orgId" />
+        <result column="org_name" property="orgName" />
+        <result column="phone" property="phone" />
+        <result column="user_type" property="userType" />
+        <!-- <result column="sex" property="sex" /> -->
+        <result column="tname" property="tname" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="is_delete" property="isDelete" />
+    </resultMap>
+    <resultMap type="com.chains.project.model.pojo.Student" id="studentMap">
+        <id column="student_id" property="studentId" />
+        <result column="org_id" property="orgId" />
+        <result column="phone" property="phone" />
+        <result column="user_type" property="userType" />
+        <result column="sname" property="sname" />
+        <result column="grade_id" property="gradeId" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="is_delete" property="isDelete" />
+    </resultMap>
+
+    <!--根据手机号查对象-->
+    <select id="getSmsvo" resultType="SmsVo">
+        select * from sms where phone= #{phone}
+    </select>
+
+    <select id="getLogin" resultType="int">
+        SELECT * FROM sms WHERE phone=#{phone} AND password=#{password}
+    </select>
+
+
+    <insert id="addsmsVo" parameterType="String">
+        insert into sms (phone,password)
+		values(#{phone},#{password})
+    </insert>
+
+    <!--根据手机号查对象-->
+   <!-- <select id="getOrg"  resultMap="orgMap">
+		SELECT o.*,u.* FROM USER u LEFT JOIN org o
+		ON u.user_id= o.user_id
+		WHERE  u.user_type=#{userType} AND u.user_kind=2 AND o.is_delete=0 AND phone= #{phone}
+	</select>
+    <select id="getTeacher"  resultMap="teacherMap">
+		SELECT t.*,u.* FROM USER u LEFT JOIN teacher t
+		ON u.user_id= t.user_id
+		WHERE  u.user_type=2 AND u.user_kind=2 AND t.is_delete=0 AND phone= #{phone}
+	</select>
+    <select id="getStudent"  resultMap="studentMap">
+		SELECT s.*,u.* FROM USER u LEFT JOIN student s
+		ON u.user_id= s.user_id
+		WHERE  u.user_type=3 AND u.user_kind=2 AND s.is_delete=0 AND phone= #{phone}
+	</select>-->
+    <select id="getUser"  resultMap="userMap">
+		SELECT * FROM user
+		WHERE phone = #{phone} AND is_delete = 0
+	</select>
+
+    <update id="changePassword" parameterType="ConfirmPassword">
+        UPDATE sms SET password = #{passwordnew} WHERE phone = #{phone}
+    </update>
+
+
+
+</mapper>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>添加用户</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+        <link rel="stylesheet" href="../css/font.css" charset="utf-8">
+        <link rel="stylesheet" href="../css/xadmin.css" charset="utf-8">
+        <script type="text/javascript" src="../js/jquery.min.js"></script>
+        <script type="text/javascript" src="../lib/layui/layui.js"  charset="utf-8" ></script>
+        <script type="text/javascript" src="../js/xadmin.js"></script>
+
+    </head>
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row">
+                <form class="layui-form" >
+                    <!--<div >
+                        <input  type="text" id="gradeId" name="gradeId" value="" required="" lay-verify="" autocomplete="off" class="layui-input">
+                        <input  type="text" id="orgId" name="orgId" value="" required="" lay-verify="" autocomplete="off" class="layui-input">
+                    </div>-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">
+                            <span class="x-red">*</span>教师</label>
+                        <div class="layui-input-inline" style="width: 150px">
+                            <select id="teacher" name="teacher" class="valid"   value="" >
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"></label>
+                        <button class="layui-btn" id="add" lay-filter="add" lay-submit="" >添加</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+<script>
+    layui.use(['form', 'layer','jquery','table'], function() {
+        $ = layui.jquery;
+        var form = layui.form,
+        layer = layui.layer;
+        var table = layui.table;
+        //监听表格复选框选择
+        table.on('checkbox(test)', function (obj) {
+            console.log(obj)
+        });
+
+    //在URL中取值（在URL中取来自gradeList.html传过来的值）
+    function GetRequest() {
+        var url = location.search;
+        //alert(url);
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for (var i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+            }}return theRequest;}
+
+        //获取教师列表用于加载到添加班级的下拉框中
+        let Request = new Object();
+        Request = GetRequest();
+        let parentId = Request['userId'];
+        $.ajax({
+            type:'GET',
+            url:'/user/teacherListByOid',
+            dataType:'json',
+            data: {parentId: parentId},
+            success:function (data) {
+                let dataList = data.data;
+                $.each(dataList, function (index,item) {
+                    $('#teacher').append(new Option(item.tname,item.userId,item.id))
+                });
+                layui.form.render("select");
+            } ,error: function () {
+                layer.alert("查询失败")
+            }
+        });
+
+    form.on('submit(add)', function(data){
+        let teacherId = $.trim($("#teacher").val());  //获取val
+        let tname = $("#teacher option:selected").text();//获取文本
+        let Request = new Object();
+        Request = GetRequest();
+        let gradeId = Request['gradeId'];
+   			$.ajax({
+            url:"/grade/addGradeTeacher?gradeId="+gradeId+"&teacherId="+teacherId,
+            type:"POST",
+            dataType:"json",
+            data:data.field,
+            success: function(data){
+                //关闭当前页，并刷新父页
+                layer.msg(data.msg, {icon:1,time:500}, function(){
+                    let index = parent.layer.getFrameIndex(window.name);
+                    window.parent.location.reload();//刷新父页面
+                    parent.layer.close(index);
+                });
+            }
+        })
+            return false;
+    });
+    });
+</script>
+</body>
+
+</html>

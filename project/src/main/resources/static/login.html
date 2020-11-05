@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html  lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- for 360 -->
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-transform"> <!-- for baidu -->
+    <meta name="MobileOptimized" content="width"><!-- for baidu -->
+    <meta name="HandheldFriendly" content="true"><!-- for baidu -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>登录</title>
+    <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" href="css/xadmin.css">
+    <link rel="stylesheet" href="./css/herder.css" charset="utf-8">
+    <link rel="stylesheet" href="css/index.css" charset="utf-8">
+    <link rel="stylesheet" href="css/login.css" charset="utf-8">
+
+    <script type="text/javascript" src="js/jquery-3.4.1.js"></script>
+    <script type="text/javascript" src="js/common.js"></script>
+    <!--<script src="lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/xadmin.js"></script>-->
+
+</head>
+
+<body class="br">
+    <div id="header"></div>
+
+    <div class="login_bg">
+        <div class="login">
+            <form method="Post"  >
+                <div class="lo_login">
+                    <div class="lo_title">登录</div><br/>
+                    <div class="lo_hint">到现有的帐户</div><br/>
+                    <div class="lo_hint">您的帐户名称：</div>
+                    <input class="lo_input" type="text" id="phone" name="phone" /><br/><br/>
+                    <div class="lo_hint">密码</div>
+                    <input class="lo_input" type="password" id="password" name="password" />
+                    <div id="lb" style="display:none;color:red;">密码错误</div><!---->
+                    <input class="lo_bu" name="commit" id="commit"  value="登录"  type="button">
+                </div>
+            </form>
+           <div class="ver_line"></div>
+
+            <div class="lo_login">
+                <div class="lo_title">创建</div><br/><br/>
+                <div class="lo_hint">一个新的免费帐户</div><br/><br/>
+                <div class="lo_hint">欢迎您免费加入轻松使用。轻松获取各种解决方案</div><br/>
+                <br/><br/><br/><br/>
+                <a href="create.html"><input class="lo_bu" name="commit" id="com mit"  value="创建帐户"  type="button"></a>
+
+            </div>
+        </div>
+    </div>
+    <div style="height: 350px"></div>
+    <div id="footer"></div>
+<script type="text/javascript" >
+    $(function() {
+        $('#header').load('header.html');
+        $('#footer').load('footer.html');
+    })
+
+    //登录并跳转到首页
+    $(document).ready(function() {
+        $("#commit").click(function () {
+            let phone = $("#phone").val();
+            let password = $("#password").val();
+            $.ajax({
+                url: "/login/login",
+                type: "post",
+                dataType: 'json',
+                data: {"phone": phone, "password": password},
+                success: function (result) {
+                    if (result.success.valueOf() == true){
+                        let userId = result.data.userId;
+                        let phone= result.data.phone;
+                        let userName = result.data.userName;
+                        let img = result.data.img;
+                        let sex = result.data.sex;
+                        let email = result.data.email;
+                        let userKind = result.data.userKind;
+                        let createBy = result.data.createBy;
+                        let userObj = {userId:userId,phone:phone,userName:userName,img:img,sex:sex,email:email,userKind:userKind,createBy:createBy}
+                        let userObjStr = JSON.stringify(userObj);
+                        sessionStorage.setItem('userSession', userObjStr);
+                        location.href = "index.html"
+                    }else{
+                        $("#lb").show();
+                        //alert("密码错误");
+                    }
+                }
+            })
+        })
+    })
+
+
+</script>
+
+
+</body>
+</html>

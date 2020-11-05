@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chains.project.mapper.ForumMapper">
+    <resultMap type="com.chains.project.model.vo.ForumVo" id="ForumVoMap">
+        <id column="forum_id" property="forumId" />
+        <result column="parent_id" property="parentId" />
+        <result column="item_id" property="itemId" />
+        <result column="user_id" property="userId" />
+        <result column="forum_contemt" property="forumContemt" />
+        <result column="praise" property="praise" />
+        <result column="forum_data" property="forumData" />
+        <result column="user_name" property="userName" />
+        <result column="img" property="img" />
+        <result column="is_delete" property="isDelete" />
+       <!-- <collection property="childForum" javaType="List" ofType="ForumVo">
+            <id column="forum_id" property="forumId" />
+            <result column="parent_id" property="parentId" />
+            <result column="item_id" property="itemId" />
+            <result column="user_id" property="userId" />
+            <result column="forum_contemt" property="forumContemt" />
+            <result column="forum_data" property="forumData" />
+            <result column="user_name" property="userName" />
+            <result column="img" property="img" />
+            <result column="is_delete" property="isDelete" />
+        </collection>-->
+    </resultMap>
+
+    <select id="forumList"  resultMap="ForumVoMap"  >
+        SELECT f.*,u.user_name,u.img FROM forum f
+        LEFT JOIN USER u ON f.user_id= u.user_id
+        WHERE f.is_delete=0  AND f.item_id=#{itemId}
+        ORDER BY forum_data DESC
+	</select>
+
+    <insert id="addForum" parameterType="ForumDto" >
+		insert into forum
+		(parent_id,item_id,user_id,forum_contemt,praise,forum_data,is_delete)
+		values(#{parentId},#{itemId},#{userId},#{forumContemt},#{praise},now(),0)
+	</insert>
+
+
+
+
+</mapper>

@@ -1,0 +1,74 @@
+@charset "utf-8";
+*{margin: 0;padding: 0}
+.create_br{
+    background: url("/images/create_bg.jpg");
+    -moz-background-size:100% 100%;
+    background-size:100% 100%;
+    margin: 0;
+    padding: 0;
+}
+/*.create_bg{
+    margin:20px 0px;
+    height: 200px;
+    border: 0.1px solid #D0D0D0;
+}*/
+.create_bg .create{
+    margin: 50px auto ;
+    width: 600px;
+    height: 650px;
+    border: 2px solid #1E2020;
+    border-radius: 8px;
+    box-shadow: 18px 18px 18px #1E2020;  /*悬浮效果*/
+   /* white-space: nowrap;*/
+}
+.create_bg .create .cr_create{
+    margin:0 auto;
+    padding: 5px;
+   /* border: 0.1px solid #D0D0D0;*/
+    width: 60%;
+    height: 100%;
+}
+.create .cr_title{
+    font-size: 32px;
+    color: #FFFFFF;
+}
+.create .lo_hint{
+    margin: 5px auto 2px 10px;
+    font-size: 16px;
+    color: #FFFFFF;
+}
+.cr_create .lo_input{
+    width: 300px;
+    height: 30px;
+    margin: 5px auto 20px 10px;
+    border: 1px solid #26487F;
+    border-radius: 4px;
+    background: #16202D;
+    color: #FFFFFF;
+}
+.cr_create .lo_rad{
+    margin: 5px auto 2px 10px;
+    float: left;
+    font-size: 12px;
+    color: #FFFFFF;
+}
+.cr_create .lo_radio{
+    margin: 5px 10px 2px 20px;
+    color: #FFFFFF;
+    float: left;
+    width: 40px;
+   /* border: 0.1px solid #FFFFFF;*/
+}
+/*.cr_create .lo_radio input{
+    font-size: 12px;
+    color: #FFFFFF;
+}*/
+.cr_create .cr_bu{
+    margin: 50px auto auto 100px;
+    width: 60px;
+    height: 30px;
+    border-radius: 4px;
+    border: #1b2838;
+    background: #00ACED;
+    color: #1b2838;
+}

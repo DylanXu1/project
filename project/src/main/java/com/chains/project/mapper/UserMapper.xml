@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chains.project.mapper.UserMapper">
+    <resultMap type="com.chains.project.model.pojo.User" id="UserMap">
+        <id column="user_serial" property="userSerial" />
+        <result column="parent_id" property="parentId" />
+        <result column="user_id" property="userId" />
+        <result column="phone" property="phone" />
+        <result column="user_Type" property="userType" />
+        <result column="user_kind" property="userKind" />
+        <result column="user_name" property="userName" />
+        <result column="org_name" property="orgName" />
+        <result column="tname" property="tname" />
+        <result column="sname" property="sname" />
+        <result column="grade_id" property="gradeId" />
+        <result column="functionary" property="functionary" />
+        <result column="sex" property="sex" />
+        <result column="email" property="email" />
+        <result column="identity" property="identity" />
+        <result column="age" property="age" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="createTime" />
+        <result column="update_by" property="createBy" />
+        <result column="is_delete" property="isDelete" />
+    </resultMap>
+    <resultMap type="com.chains.project.model.vo.TeacherVo" id="teacherVoMap">
+        <id column="user_serial" property="userSerial" />
+        <result column="parent_id" property="parentId" />
+        <result column="user_id" property="userId" />
+        <result column="phone" property="phone" />
+        <result column="user_Type" property="userType" />
+        <result column="user_kind" property="userKind" />
+        <result column="user_name" property="userName" />
+        <result column="org_name" property="orgName" />
+        <result column="tname" property="tname" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="is_delete" property="isDelete" />
+    </resultMap>
+    <resultMap type="com.chains.project.model.vo.StudentVo" id="studentVoMap">
+        <id column="user_serial" property="userSerial" />
+        <result column="phone" property="phone" />
+        <result column="org_id" property="orgId" />
+        <result column="org_name" property="orgName" />
+        <result column="grade_id" property="gradeId" />
+        <result column="grade_name" property="gradeName" />
+        <result column="sname" property="sname" />
+        <result column="user_type" property="userType" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="is_delete" property="isDelete" />
+    </resultMap>
+
+    <!--前端添加用户-->
+    <insert id="addUser" parameterType="User" >
+		insert into user
+		(parent_id,user_id,phone,user_kind,user_type,user_name,sex,email,create_time,create_by,is_delete)
+		values(0,#{userId},#{phone},1,4,#{userName},#{sex},#{email},now(),#{createBy},0)
+	</insert>
+
+    <!--根据手机号查user-->
+    <select id="getUser" resultMap="UserMap">
+        select * from user where phone= #{phone} AND is_delete=0
+    </select>
+
+    <select id="getUserId" resultType="Long">
+        select user_id from user where phone= #{phone} AND is_delete=0
+    </select>
+
+    <!--禁用机构用户-->
+    <update id="stopTeam" parameterType="int">
+         UPDATE user SET is_delete = 1 WHERE user_serial = #{userSerial}
+    </update>
+
+    <!--企业列表--><!--===============================-->
+    <select id="orgList"  resultMap="UserMap"  >
+		SELECT * FROM user
+		where user_type =1 AND is_delete = 0
+		LIMIT #{startItem} ,#{limit}
+	</select>
+    <select id="orgListCount"  resultType="int" >
+		SELECT COUNT(*) FROM
+		(SELECT * FROM user WHERE user_type =1 AND is_delete = 0)s
+	</select>
+    <!--添加企业-->
+    <insert id="addOrg" parameterType="User" >
+		insert into user
+		(parent_id,user_id,phone,user_kind,user_type,org_name,functionary,create_time,create_by,is_delete)
+		values(#{parentId},#{userId},#{phone},2,1,#{orgName},#{functionary},now(),#{createBy},0)
+	</insert>
+
+    <!--查看企业名下的教师列表-->
+    <select id="teacherListByOid"  resultMap="teacherVoMap"  >
+		SELECT o.org_name,u.* FROM USER u, (SELECT user_id ,org_name FROM USER WHERE user_id = #{parentId})o
+        WHERE o.user_id = u.parent_id AND parent_id = #{parentId} AND user_type = 2 AND is_delete = 0
+		LIMIT #{startItem} ,#{limit}
+	</select>
+    <select id="teacherListCount"  resultType="int" >
+		SELECT COUNT(*) FROM
+		(SELECT * FROM user WHERE user_type =2 AND parent_id = #{parentId} AND is_delete = 0)s
+	</select>
+
+    <insert id="addTeacher" parameterType="User" >
+		insert into user
+		(parent_id,user_id,phone,user_kind,user_type,tname,create_time,create_by,is_delete)
+		values(#{parentId},#{userId},#{phone},2,2,#{tname},now(),#{createBy},0)
+	</insert>
+
+    <!--根据teacherId查询学生列表-->
+    <select id="studentListByT"  resultMap="studentVoMap"  >
+		SELECT g.grade_name,o.org_name,u.* FROM USER u,grade g,
+		(SELECT org_name,user_id FROM USER WHERE user_id IN(SELECT parent_id FROM USER WHERE user_id = #{userId}))o
+        WHERE u.grade_id = g.grade_id AND o.user_id = u.parent_id AND u.is_delete=0 AND u.grade_id IN
+        (SELECT grade_id FROM grade_teacher WHERE teacher_id = #{userId})
+		LIMIT #{startItem} ,#{limit}
+	</select>
+    <!---->
+    <select id="studentListByTCount"  resultType="int" >
+		SELECT COUNT(*) FROM
+		(SELECT * FROM user WHERE is_delete=0 AND grade_id IN
+		(SELECT grade_id FROM grade_teacher WHERE teacher_id = #{userId}))s
+	</select>
+    <!--添加学生-->
+    <insert id="addStudent" parameterType="User" >
+		insert into user
+		(parent_id,user_id,phone,user_kind,user_type,sname,grade_id,create_time,create_by,is_delete)
+		values(#{parentId},#{userId},#{phone},2,3,#{sname},#{gradeId},now(),#{createBy},0 )
+	</insert>
+
+    <!--修改图像-->
+    <update id="changeImg" parameterType="String">
+         UPDATE user SET img = #{img}
+         WHERE user_id = #{userId}
+    </update>
+    <!--修改图像--><!--副本方法仅测试-->
+    <!--<update id="changeImgCo"  >
+         UPDATE user SET img = #{img}
+         WHERE user_serial = #{userSerial}
+    </update>-->
+
+
+    <!--修改密码-->
+    <update id="changePassword" parameterType="UserInfoDto">
+         UPDATE sms SET password = #{password} WHERE phone = #{phone}
+    </update>
+
+
+
+</mapper>

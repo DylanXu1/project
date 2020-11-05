@@ -1,0 +1,178 @@
+*{margin: 0;padding: 0}
+.br{
+	background:#1b2838;
+	margin: 0;
+	padding: 0;
+}
+.body_main{
+	width: 100%;
+	height: 550px;
+}
+.pay_body{
+	margin:0 auto;      /*div本身模块居中*/
+	width :1000PX;
+	height: 100%;
+	/*border: 0.05px solid #FFFFFF;*/
+}
+.pay_body .bb_bar{
+	float: left;
+	width:100%;
+	height: 30px;
+	/*border: 0.05px solid #FFFFFF;*/
+}
+.pay_body .top_title{
+	float: left;
+	width:100%;
+	height: 60px;
+	/*border: 0.05px solid #00FF00;*/
+}
+.pay_body .top_title .p1{
+	margin: 5px auto auto 5px;
+	font-size: 14px;
+	color:#C4C4C4;
+}
+.pay_body .top_title .p2{
+	margin: 5px auto auto 5px;
+	font-size: 24px;
+	color:#FFFFFF;
+}
+.pay_body .gapbar{
+	width:100%;
+	height: 10px;
+}
+.pay_body .cart{
+	background-color: #14182b;
+	float: left;
+	width:100%;
+	height: 100%;
+	min-height: 200px;
+	box-shadow: 5px 8px 5px #030414; /*悬浮效果*/
+	/*border: 0.05px solid #00fff0;*/
+}
+.pay_body .cart .cart_bar{
+	width: 100%;
+	height: 85px;
+	/*border: 0.05px solid #005563;*/
+}
+.pay_body .cart .cart_bar .cartm{
+	background-color: #16202D;
+	width: 100%;
+	height: 90%;
+	/*border: 0.05px solid #00ff00;*/
+}
+.pay_body .cart .cart_bar .gap{
+	width: 100%;
+	height: 10%;
+	/*border: 0.05px solid #ff0000;*/
+}
+.pay_body .cart .cart_bar .cartm .barimg{
+	float: left;
+	width: 184px;
+	height:70px;
+	/*border: 0.05px solid #FFFFFF;*/
+}
+
+.pay_body .cart .cart_bar .cartm .barimg span img{
+	min-width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.pay_body .cart .cart_bar .cartm .gname{
+	float: left;
+	width: 25%;
+	height: 100%;
+	color: #C4C4C4;
+	text-align:center;  /*水平居中*/
+	line-height:75px;   /*垂直居中 让值等于div的高度*/
+	/*border: 0.05px solid #003625;*/
+}
+.pay_body .cart .cart_bar .cartm .ginfo{
+	float: left;
+	width: 25%;
+	height: 100%;
+	color: #C4C4C4;
+	text-align:center;  
+	line-height:75px;   
+	/*border: 0.05px solid #003625;*/
+}
+.pay_body .cart .cart_bar .cartm .gprice{
+	float: left;
+	width: 24.9%;
+	height: 100%;
+	color: #C4C4C4;
+	text-align:center;  
+	line-height:75px;
+	/*border: 0.05px solid #003625;*/
+}
+.pay_body .cart .cart_bar .cartm .del{
+	background-color: #C4C4C4;
+	float: right;
+	width: 6%;
+	height: 100%;
+	text-align:center;
+	line-height:75px;
+	/*border: 0.05px solid #00ffee;*/
+}
+.pay_body .cart .cart_bar .cartm .del img{
+	width:25%;
+	height:25%;
+}
+
+.pay_body .cart .slicer{
+	width:100%;
+	height: 1px;
+	/*border: 0.05px solid #A1C6DC;*/
+}
+.pay_body .cart .cart_tot{
+	width:100%;
+	height: 40px;
+	/*border: 0.05px solid #00FF00;*/
+}
+.pay_body .cart .cart_tot .cartto{
+	float: left;
+	margin: 5px auto 5px 800px;
+	color: #A1C6DC;
+	/*border: 0.05px solid #235415;*/
+}
+.pay_body .cart .cart_tot .cartp{
+	float: right;
+	margin: 5px 25px ;
+	color: #A1C6DC;
+	/*border: 0.05px solid #235415;*/
+}
+.pay_body .cart .cart_tot .sub{
+	margin: 0px 30px;
+	float: right;
+	color: #ff4c41;
+}
+.pay_body .cart .cart_tot .sub button{
+	margin: 10px;
+	float: right;
+	color: #FFFFFF;
+	font-size: 18px;
+	background-color: #597104;
+	border-radius:10px;
+	width:100px;
+	height: 40px;
+	border:none;  /*按钮取消立体效果*/
+}
+.pay_body .cart .emptyCar .empty_img{
+	 margin: 20px 20px auto 50px;
+	 float: left;
+	 /*border: 0.1px solid #FFFFFF;*/
+ }
+.pay_body .cart .emptyCar .empty_tex{
+	margin: 80px 20px auto 0px;
+	float: left;
+	/*border: 0.1px solid #FFFFFF;*/
+}
+.emptyCar .empty_tex span{
+	font-size: 14px;
+	color: #C4C4C4;
+}
+.empty_tex .emlian{
+	font-size: 14px;
+	color: #01AAED;
+}
+

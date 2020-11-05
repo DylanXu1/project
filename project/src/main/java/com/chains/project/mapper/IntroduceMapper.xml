@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chains.project.mapper.IntroduceMapper">
+    <resultMap type="com.chains.project.model.pojo.Introduce" id="IntroduceMap">
+        <result column="introduce_id" property="introduceId" />
+        <result column="item_id" property="itemId" />
+        <result column="intro_title" property="introTitle" />
+        <result column="content" property="content" />
+        <result column="img" property="img" />
+        <result column="is_delete" property="isDelete" />
+    </resultMap>
+
+    <!--查项目介绍列表-->
+    <select id="introduceList"  parameterType="int" resultMap="IntroduceMap" >
+	    SELECT * FROM introduce
+	    WHERE item_id = #{itemId}
+	</select>
+
+    <insert id="addIntroduce" parameterType="Introduce">
+		insert into introduce (item_id,intro_title,content,img,is_delete)
+		values(#{itemId},#{introTitle},#{content},#{img},0)
+	</insert>
+
+
+</mapper>

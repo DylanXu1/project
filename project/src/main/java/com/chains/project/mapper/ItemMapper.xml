@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chains.project.mapper.ItemMapper">
+    <resultMap type="com.chains.project.model.pojo.Item" id="ItemMap">
+        <id column="item_id" property="itemId" />
+        <result column="item_name" property="itemName" />
+        <result column="title" property="title" />
+        <result column="img_main" property="imgMain" />
+        <result column="introduce" property="introduce" />
+        <result column="original_price" property="originalPrice" />
+        <result column="price" property="price" />
+        <result column="developer" property="developer" />
+        <result column="issuing_data" property="issuingData" />
+        <result column="is_delete" property="isDelete" />
+        <collection property="image" javaType="List" ofType="Image">
+            <id column="image_id" property="imageId" />
+            <result column="img_add" property="imgAdd" />
+            <result column="video_add" property="videoAdd" />
+            <result column="img_type" property="imgType" />
+        </collection>
+    </resultMap>
+
+    <resultMap type="com.chains.project.model.pojo.SysMenu" id="sysMenuMap">
+        <id column="sys_id" property="sysId" />
+        <result column="parent_id" property="parentId" />
+        <result column="menu_name" property="menuName" />
+        <result column="url" property="url" />
+        <result column="icon" property="icon" />
+        <result column="sort_order" property="sortOrder" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="is_delete" property="isDelete" />
+    </resultMap>
+
+    <!--all子菜单列表(包含子菜单图片列表)-->
+    <select id="itemList"  resultMap="ItemMap" >
+	    SELECT i.item_id,i.item_name,i.title,i.img_main,i.introduce,i.original_price,i.price,i.developer,i.issuing_data,i.is_delete,
+	        im.image_id,im.img_add,im.img_type,im.is_delete
+        FROM item i LEFT JOIN image im  ON i.item_id = im.item_id
+	</select>
+    <!--查询子菜单详情-->
+    <select id="itemDetal"  resultMap="ItemMap" >
+        SELECT i.*,im.* FROM item i LEFT JOIN image im ON i.item_id = im.item_id
+        WHERE i.item_id = #{itemId}
+	</select>
+    <!--SELECT i.*,im.* FROM item i LEFT JOIN image im ON i.item_id = im.`item _id`
+    where i.item_id = #{itemId}-->
+
+    <!--添加子菜单-->
+    <insert id="addItem" parameterType="ItemVo">
+		insert into item (item_id,parent_id,item_name,title,img_main,introduce,original_price,price,developer,issuing_data,is_delete)
+		values (#{itemId},#{parentId},#{itemName},#{title},#{imgMain},#{introduce},#{originalPrice},#{price},#{developer},now(),0)
+	</insert>
+
+    <!--根据父id添加菜单-->
+    <insert id="addSysMenu" parameterType="SysMenu">
+		insert into sys_menu (parent_id,menu_name,url,create_time,is_delete)
+		values (#{parentId},#{menuName},#{url},now(),0)
+	</insert>
+    <!--根据当前id编辑菜单-->
+    <update id="editSysmenu" parameterType="SysMenuvO">
+        update sys_menu /*(sys_id,menu_name,sort_order,update_time)*/
+        <set>
+            <if test="menuName!=null and menuName!=''">
+                menu_name = #{menuName},
+            </if>
+            <if test="sortOrder!=null and sortOrder!=''">
+                sort_order=#{sortOrder},
+            </if>
+            update_time = now(),
+        </set>
+        where sys_id=#{sysId}
+    </update>
+    <!--服务层展示递归列表-->
+    <select id="queryMenuList" resultMap="sysMenuMap">
+        SELECT sys_id,parent_id,menu_name,url,icon,sort_order,create_time,update_time,is_delete
+        FROM sys_menu ORDER BY sort_order ASC
+    </select>
+
+
+
+
+    <!--查主子菜单复合列表-->
+    <!--<select id="menusitemList"  resultMap="MenusMap" >
+	    SELECT m.menu_name, m.menu_id, i.item_id,i.item_name,i.introduce,i.original_price,i.price,i.developer,i.issuing_data,i.is_delete
+	    FROM menus m LEFT JOIN item i  ON menu_id= menus_id
+	</select>-->
+
+    <!--查主菜单列表-->
+   <!-- <select id="menusList"  resultType="String" >
+	    SELECT menu_name FROM menus
+	</select>-->
+
+    <!--添加主菜单-->
+    <!--<insert id="addMenus" parameterType="com.chains.project.model.pojo.Menus">
+		insert into menus (menu_name,is_delete)
+		values (#{menuName},0)
+	</insert>-->
+
+    <!--修改主菜单-->
+    <!--<update id="changeMenus" parameterType="com.chains.project.model.pojo.Menus" >
+        update menus
+        <set>  menu_name = #{menuName} </set>
+        where menu_id = #{menuId}
+    </update>-->
+
+    <!--删除主菜单-->
+   <!-- <update id="delMenus" parameterType="int" >
+        update menus
+        <set>  is_delete = 1 </set>
+        where menu_id = #{menuId}
+    </update>-->
+
+    <!--修改子菜单-->
+   <!-- <update id="changeItem" parameterType="com.chains.project.model.pojo.Item" >
+        update item
+        <set>  menus_id = #{menusid},item_name = #{itemName},introduce = #{introduce},original_price = #{originalPrice},
+            price = #{price},developer = #{developer}</set>
+        where item_id = #{itemId}
+    </update>-->
+
+    <!--删除子菜单-->
+   <!-- <update id="delItem" parameterType="int" >
+        update item
+        <set>  is_delete = 1 </set>
+        where item_id = #{itemId}
+    </update>-->
+
+    <!--数据库展示归列表-->
+   <!-- <select id="sysMenuList" resultMap="sysMenuMap">
+        WITH RECURSIVE admin_cet AS
+        (SELECT item_id,menu_name,parent_id,0 AS alv FROM sys_menu
+        UNION ALL
+        SELECT sm.item_id,sm.menu_name,sm.parent_id,alv+1 AS alv FROM sys_menu AS sm INNER JOIN admin_cet AS ac
+        ON sm.parent_id = ac.item_id)
+        SELECT item_id,menu_name,parent_id,alv FROM admin_cet
+    </select>-->
+
+    <!--服务层展示递归列表--><!--layui对象-->
+    <!--<select id="queryMenuList" resultMap="TreeMenuMap">
+        SELECT sys_id,parent_id,menu_name,url,icon,sort_order,create_time,update_time,is_delete
+        FROM sys_menu ORDER BY sort_order ASC
+    </select>-->
+
+</mapper>

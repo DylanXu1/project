@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chains.project.mapper.OrdersMapper">
+    <resultMap type="com.chains.project.model.pojo.Orders" id="ordersMap">
+        <result column="orders_id" property="ordersId" />
+        <result column="user_id" property="userId" />
+        <result column="pay_way" property="payWay" />
+        <result column="pay_date" property="payDate" />
+        <result column="is_pay" property="isPay" />
+        <result column="is_delete" property="isDelete" />
+        <collection property="orderGoods" javaType="List" ofType="OrderGoods">
+            <id column="shopping_id" property="shoppingId" />
+            <result column="goods_id" property="goodsId" />
+            <result column="orders_id" property="ordersId" />
+            <result column="goods_title" property="goodsTitle" />
+            <result column="goods_imgmain" property="goodsImgmain" />
+            <result column="goods_price" property="goodsPrice" />
+            <result column="is_delete" property="isDelete" />
+        </collection>
+    </resultMap>
+    <resultMap type="com.chains.project.model.dto.Shopping" id="shoppingMap">
+        <id column="shopping_id" property="shoppingId" />
+        <result column="user_id" property="userId" />
+        <result column="orders_id" property="ordersId" />
+        <result column="goods_title" property="goodsTitle" />
+        <result column="goods_id" property="goodsId" />
+        <result column="developer" property="developer" />
+        <result column="goods_imgmain" property="goodsImgmain" />
+        <result column="goods_price" property="goodsPrice" />
+    </resultMap>
+    <resultMap type="com.chains.project.model.vo.OrderGoodsVo" id="OrderGoodsVoMap">
+        <id column="shopping_id" property="shoppingId" />
+        <result column="goods_id" property="goodsId" />
+        <result column="orders_id" property="ordersId" />
+        <result column="goods_title" property="goodsTitle" />
+        <result column="goods_imgmain" property="goodsImgmain" />
+        <result column="developer" property="developer" />
+        <result column="goods_price" property="goodsPrice" />
+        <result column="user_id" property="userId" />
+        <result column="user_name" property="userName" />
+        <result column="pay_way" property="payWay" />
+        <result column="pay_date" property="payDate" />
+        <result column="is_delete" property="isDelete" />
+    </resultMap>
+
+    <!--未支付订单(购物车)列表--><!--已改-->
+    <select id="shoppingList"  resultMap="shoppingMap" >
+	   SELECT o.orders_id,o.phone,o.user_id, o.pay_way,o.is_pay,o.is_delete order_delete,o.pay_date,
+	        og.shopping_id,og.goods_id,og.goods_title,og.developer,og.goods_imgmain,og.goods_price,og.is_delete ordergoods_delete
+        FROM orders o LEFT JOIN order_goods og
+        ON o.orders_id = og.orders_id
+        WHERE o.is_pay=0 AND o.is_delete=0 AND o.phone = #{phone};
+	</select>
+    <!--根据用户查已支付订单列表-->
+    <select id="orderGoodsListByUser"  resultMap="OrderGoodsVoMap" >
+	   SELECT * FROM (SELECT o.*,u.user_name FROM orders o,`user`u WHERE o.`user_id`= u.user_id) o LEFT JOIN order_goods og
+	   ON  o.orders_id= og.orders_id WHERE og.orders_id
+	   IN (SELECT orders_id FROM orders WHERE is_pay=1 AND phone=#{phone})
+	</select>
+    <!--根据全部用户查已支付订单列表-->
+    <select id="orderGoodsList"  resultMap="OrderGoodsVoMap" >
+	   SELECT * FROM (SELECT o.*,u.user_name FROM orders o,`user`u WHERE o.`user_id`= u.user_id) o LEFT JOIN order_goods og
+	   ON  o.orders_id= og.orders_id
+	</select>
+
+    <!--增加订单购物车-->
+    <insert id="addOrders" parameterType="Shopping" >
+		insert into orders (orders_id,user_id,phone,pay_way,pay_id,pay_date,is_pay,is_delete)
+		values (#{ordersId},#{userId},#{phone},0,#{payId},now(),0,0)
+	</insert>
+    <select id="ispay" resultType="int">
+       SELECT orders_id FROM orders WHERE is_pay = 0 AND phone = #{phone};
+    </select>
+    <insert id="addOrderGoods" parameterType="Shopping">
+		insert into order_goods (orders_id,goods_id,goods_title,ordergoods_id,goods_imgmain,goods_price,developer,is_delete)
+		values (#{ordersId},#{goodsId},#{goodsTitle},#{ordergoodsId},#{goodsImgmain},#{goodsPrice},#{developer},0)
+	</insert>
+
+    <!--加入订单列表(无支付)-->
+    <insert id="addOrdersNP" parameterType="Shopping" >
+		insert into orders (orders_id,user_id,phone,pay_way,pay_id,pay_date,is_pay,is_delete)
+		values (#{ordersId},#{userId},#{phone},0,'P000000000',now(),1,0)
+	</insert>
+    <insert id="addOrderGoodsNP" parameterType="Shopping">
+		insert into order_goods (orders_id,goods_id,goods_title,ordergoods_id,goods_imgmain,goods_price,developer,is_delete)
+		values (#{ordersId},#{goodsId},#{goodsTitle},#{ordergoodsId},#{goodsImgmain},#{goodsPrice},#{developer},0)
+	</insert>
+
+    <!--删除订单中的商品-->
+    <delete id="delOrderGoods" parameterType="int">
+       DELETE FROM order_goods WHERE shopping_id = #{shoppingId}
+    </delete>
+    <select id="orderGoodsCount" resultType="int">
+        SELECT COUNT(*) FROM order_goods WHERE orders_id = (SELECT orders_id FROM order_goods WHERE shopping_id=#{shopping_id})
+    </select>
+    <delete id="delOrders" parameterType="int">
+       DELETE FROM orders WHERE orders_id = (SELECT orders_id FROM order_goods WHERE shopping_id=#{shopping_id})
+    </delete>
+
+
+</mapper>

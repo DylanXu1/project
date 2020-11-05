@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chains.project.mapper.GradeMapper">
+    <resultMap type="com.chains.project.model.vo.GradeVo" id="GradeVoMap">
+        <id column="grade_id" property="gradeId" />
+        <result column="grade_name" property="gradeName" />
+        <result column="org_id" property="orgId" />
+        <result column="org_name" property="orgName" />
+        <result column="is_delete" property="isDelete" />
+    </resultMap>
+    <resultMap type="com.chains.project.model.dto.GradeTeacher" id="GradeTeacherMap">
+        <id column="gradeteacher_id" property="gradeteacherId" />
+        <result column="grade_id" property="gradeId" />
+        <result column="teacher_id" property="teacherId" />
+        <result column="phone" property="phone" />
+        <result column="tname" property="tname" />
+        <result column="grade_name" property="gradeName" />
+        <result column="is_delete" property="isDelete" />
+    </resultMap>
+
+    <select id="gradeList"  resultMap="GradeVoMap"  >
+        SELECT g.*,u.org_name FROM grade g,USER u
+		WHERE u.user_id= g.org_id AND g.org_id =#{userId} AND g.is_delete = 0
+	</select>
+    <!--LIMIT #{startItem} ,#{limit}-->
+
+    <insert id="addGrade" parameterType="GradeVo">
+		insert into grade (grade_name,org_id,is_delete)
+		values (#{gradeName},#{orgId},0)
+	</insert>
+
+    <!--删除班级-->
+    <update id="delGrade" parameterType="int" >
+        update grade
+        <set>  is_delete = 1 </set>
+        where grade_id = #{gradeId}
+    </update>
+
+    <!--给班级添加教师-->
+    <insert id="addGradeTeacher" parameterType="GradeTeacher">
+		insert into grade_teacher (grade_id,teacher_id)
+		values (#{gradeId},#{teacherId})
+	</insert>
+    <!--查询该班级教师列表-->
+    <select id="gradeTeacherList"  resultMap="GradeTeacherMap"  >
+		SELECT gt.gradeteacher_id,gt.grade_id,gt.teacher_id,u.tname,u.phone,gt.is_delete FROM grade_teacher gt,USER u
+		WHERE gt.teacher_id= u.user_id AND gt.grade_id= #{gradeId} AND gt.is_delete = 0
+	</select>
+    <!--查询该教师班级列表-->
+    <select id="teacherGradeList"  resultMap="GradeTeacherMap"  >
+        SELECT g.grade_name,gt.grade_id FROM grade_teacher gt,grade g WHERE g.grade_id = gt.grade_id AND teacher_id = #{userId}
+	</select>
+
+    <select id="queryTeacherIsExistForGrade"  resultType="int"  >
+		SELECT COUNT(*) FROM grade_teacher WHERE grade_id = #{gradeId} AND teacher_id = #{teacherId}
+	</select>
+    <!--移除班级里的教师-->
+    <delete id="delGradeTeacher">
+        DELETE FROM grade_teacher WHERE teacher_id = #{teacherId} and grade_id = #{gradeId}
+    </delete>
+
+
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chains.project.mapper.TeachingMapper">
+    <resultMap type="com.chains.project.model.vo.TeachingVo" id="TeachingVoMap">
+        <id column="teach_id" property="teachId" />
+        <result column="group_id" property="groupId" />
+        <result column="category_id" property="categoryId" />
+        <result column="category_name" property="categoryName" />
+        <result column="clause_title" property="clauseTitle" />
+        <result column="clause_content" property="clauseContent" />
+        <result column="view_count" property="viewCount" />
+        <result column="create_time" property="createTime" />
+        <result column="is_delete" property="isDelete" />
+    </resultMap>
+
+
+
+    <!--VR教学资源分类列表--><!--SELECT后面的所有列必须包含在GROUP BY后面，否则语法非法-->
+    <select id="getCategoryList" resultMap="TeachingVoMap">
+        SELECT category_id,category_name FROM w_category WHERE group_id= #{groupId} GROUP BY category_id,category_name
+    </select>
+   <!-- /*SELECT category_name, category_id from w_teaching where group_id= #{groupId} GROUP BY category_name,category_id*/-->
+
+    <!--详情列表自动，按时间排序获取前8条数据-->
+    <select id="getclauseList" resultMap="TeachingVoMap">
+        SELECT * FROM w_category
+        order by create_time desc
+        limit 8;
+    </select>
+
+    <!--按分类查资源详情-->
+    <select id="getclauseListBycat" resultMap="TeachingVoMap">
+        SELECT * FROM w_category WHERE category_id= #{categoryId}
+        order by create_time desc
+    </select>
+
+    <select id="teachDetail" resultMap="TeachingVoMap">
+        SELECT * FROM w_category wc LEFT JOIN w_teaching wt
+        ON wc.teach_id= wt.teach_id WHERE wc.teach_id= #{teachId}
+    </select>
+
+     <!--“<”用&lt;  “>”用&gt;-->
+    <select id="teachOtherDetail" resultMap="TeachingVoMap">
+        SELECT * FROM w_category wc LEFT JOIN w_teaching wt
+        ON wc.teach_id= wt.teach_id WHERE wc.teach_id IN
+        ((SELECT MAX(teach_id) FROM w_category WHERE teach_id &lt;#{teachId}),#{teachId},
+        (SELECT MIN(teach_id) FROM w_category WHERE teach_id &gt; #{teachId}))
+    </select>
+
+
+</mapper>

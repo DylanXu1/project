@@ -1,0 +1,78 @@
+@charset "utf-8";
+*{margin: 0;padding: 0}
+
+.body{
+    margin:0 auto;      /*div本身模块居中*/
+    width :100%;
+    height: 100%;
+    display: flex;
+    justify-content:left;
+}
+.body .navleft{
+    margin: 0;
+    width:250px;
+    height: 600px;
+    background: #A0A692;
+}
+.body .navleft .side-nav{
+    margin: 15px;
+    width:250px;
+    height:500px;
+    /* border: 0.1px solid #FF00FF;*/
+}
+.side-nav .person_info{
+    margin: 10px auto auto 50px;
+    width: 100%;
+    height: 100px;
+    /* border: 0.1px solid #FF00FF;*/
+}
+.side-nav .person_info .person_img{
+    margin: 3px;
+    width: 80px;
+    height:80px;
+    border-radius:40px;
+    overflow: hidden;
+    background: url(/images/renwu.png);
+    -moz-background-size:100% 100%;
+    background-size:100% 100%;
+    /*border: 0.1px solid #829065;*/
+}
+.side-nav .person_info .person_img img{
+    width: 100%;
+    height: 100%
+}
+.side-nav .person_info .person_name{
+    margin: 3px;
+    width: 100%;
+    height:30px;
+    /* border: 0.1px solid #FF00FF;*/
+}
+
+.body .navleft .side-nav ul li{
+    list-style-type:none;
+    line-height:45px;
+}
+.body .navleft .side-nav ul li a{
+    text-decoration: none;
+    color: #000000;
+}
+.body .rightblock{
+    margin: 10px 15px;
+   /* border: 0.1px solid #FF00FF;*/
+}
+table {
+    margin: 15px;
+    border: 1px;
+   /* width: 1500px;*/
+    height: 60px;
+    text-align: center;
+    cellpadding:1px;
+    border-spacing:0;
+}
+.table tbody tr td{
+    border:0px;
+}
+.layui-table-cell{
+    height:80px;
+    line-height: 80px;
+}

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>添加班级</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+        <link rel="stylesheet" href="../css/font.css" charset="utf-8">
+        <link rel="stylesheet" href="../css/xadmin.css" charset="utf-8">
+        <script type="text/javascript" src="../js/jquery.min.js"></script>
+        <script type="text/javascript" src="../lib/layui/layui.js"  charset="utf-8" ></script>
+        <script type="text/javascript" src="../js/xadmin.js"></script>
+    </head>
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row">
+                <form class="layui-form" >
+                    <div>
+                        <input type="hidden" id="orgId" name="orgId" value="" required="" lay-verify="" autocomplete="off" class="layui-input">
+                    </div>
+					<div class="layui-form-item">
+                        <label class="layui-form-label">
+                            <span class="x-red"></span>班级名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="gradeName" name="gradeName" required="" lay-verify="username" autocomplete="off" class="layui-input" style="width: 180px"></div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"></label>
+                        <button class="layui-btn" id="add" lay-filter="add" lay-submit="" >添加</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+<script type="text/javascript">
+
+    let userId = JSON.parse(sessionStorage.getItem('userSession')).userId;
+    $('#orgId').val(userId);
+    alert("orgId是："+userId);
+
+    layui.use(['form', 'layer', 'jquery'],
+        function () {
+            const $ = layui.jquery;
+            const form = layui.form,
+                layer = layui.layer;
+
+        /*添加班级（根据企业orgId添加班级，这里是根据登录用户获取到的orgId）*/
+        form.on('submit(add)', function(data){
+            $.ajax({
+                url:"/grade/addGrade",
+                type:"POST",
+                dataType:"json",
+                data:data.field,   /*这里是添加id=“add”的form表单中所有包含的输入框里的name值*/
+                success: function(data){
+                    layer.msg(data.msg, {icon:1,time:500}, function(){
+                        let index = parent.layer.getFrameIndex(window.name);
+                        window.parent.location.reload();//刷新父页面
+                        parent.layer.close(index);
+                    });
+                }
+            })
+           // alert(data.field);
+            return false;
+        });
+
+
+    })
+</script>
+    </body>
+</html>

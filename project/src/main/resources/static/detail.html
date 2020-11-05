@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html class="bit-html mobile-false js_active  vc_desktop  vc_transform  vc_transform  csstransforms csstransforms3d csstransitions no-touch" dir="ltr" lang="zh-CN"><!--<![endif]-->
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="renderer" content="webkit"> 
+	<meta http-equiv="Cache-Control" content="no-transform"> <!-- for baidu -->
+    <meta name="MobileOptimized" content="width"><!-- for baidu -->
+    <meta name="HandheldFriendly" content="true"><!-- for baidu -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">	
+	<title>detail</title>
+	<link rel="stylesheet" href="./css/herder.css" charset="utf-8">
+	<link rel="stylesheet" href="./iconfonts/iconfont.css" charset="utf-8">
+	<link rel="stylesheet" href="./css/index.css" charset="utf-8">	
+	<link rel="stylesheet" href="./css/detail.css" charset="utf-8">
+	<script type="text/javascript" src="./js/jquery.min.js"></script>
+	<script type="text/javascript" src="./js/common.js"></script>
+	<script type="text/javascript" src="./ckeditor/ckeditor.js"></script>
+</head>
+
+
+<body class="br">
+	<div id="header"></div>
+	
+	<!--正文部分 -->
+	<div class="detail_body" >
+		<div class="bb_bar"></div>
+		<div class="top_title">
+			<span class="p1">所有项目 ></span>
+			<span class="p1" id="item">Universe Sandbox</span>
+			<span class="p1">社区中心</span><br/>
+			<span class="p2" id ="itemName"></span>
+		</div>
+		<form id="addShoppingCart" action="" method ="post" target="frameName" ><!--提交购物车页面不跳转--><!---->
+			<div class="top_main">
+				<div class="topone">
+					<div class="left">
+						<div class="lefta"><img id="mainImg" src=""/></div>
+						<div class="leftb"></div><!--图列表-->
+					</div>
+					<div class="right">
+						<div class='righta'>
+							<img id="vice-img" src="" />
+						</div>
+						<div class='rightb'>
+							<p class="p1" id="introduce"></p>
+							<p></p>
+							<p class="p2"><span class="span1">最近评测：</span> <span class="span2">好评如潮</span> <span class="span3">(316)</span></p>
+							<p class="p2"><span class="span1">全部评测：</span> <span class="span2">特别好评</span> <span class="span3">(316)</span></p>
+							<p class="p2"><span class="span1">发行日期：</span> <span class="span3">2020年7月30号</span></p>
+							<p class="p2"><span class="span1">开发商：  </span> <span class="span2"> Giant Army</span></p>
+							<p class="p2"><span class="span1">发行商：  </span> <span class="span2"> Giant Army</span></p>
+						</div>
+						<div class='rightc'>角色 模式 运行 动作 开发 自定义</div>
+					</div>
+				</div>
+			</div>
+
+			<input type="hidden" id="userId"   name="userId" value=""/>
+			<input type="hidden" id="phone"   name="phone" value=""/>
+			<input type="hidden" id="ordersId"   name="ordersId" value=""/>
+			<input type="hidden" id="goodsTitle" name="goodsTitle" value=""/>
+			<input type="hidden" id="ordergoodsId" name="ordergoodsId" value=""/> <!--随机订单号-->
+			<input type="hidden" id="payId" name="payId" value=""/> <!--支付单号-->
+			<input type="hidden" id="goodsId"    name="goodsId" value=""/>  <!--itemId等于goodsId-->
+			<input type="hidden" id="developer" name="developer" value=""/>
+			<input type="hidden" id="goodsImgmain" name="goodsImgmain" value=""/>
+			<input type="hidden" id="goodsPrice" name="goodsPrice" value=""/>
+
+			<div class="bb_bar"></div>
+			<!--加入到购物车-->
+			<div class="b_buy" id="b_buy_1" style="display: none">
+				<div class="buy_left"><span>购买&nbsp;&nbsp;&nbsp;</span><span class="buy_ti"></span></div>
+				<div class="buy_right">
+					<div class="by_pr" id="by_pr">￥</div>
+					<input class="bu" id="addshopping" type="button" name="submit" value="加入购物车" />
+				</div>
+			</div>
+
+			<!--加入到我的项目-->
+			<div class="b_buy" id="b_buy_2" style="display: none">
+				<div class="buy_left"><span>加入&nbsp;&nbsp;&nbsp;</span><span class="buy_ti"></span><span>&nbsp;&nbsp;到我的个人中心</span></div>
+				<div class="buy_right">
+					<input class="bu" id="addshopping1" type="button" name="submit" value="立即获取"/>
+				</div>
+			</div>
+
+		</form>
+		<iframe id="id_iframe" name="frameName" style="display:none;"></iframe><!--提交购物车页面不跳转-->
+		<div class="bb_bar"></div>
+
+
+		<div class="introduce_block">
+			<div class="introduce" id="detail_introduce">
+				<div class="intro_block">
+					<div class="intro_title">关于这个项目</div>
+					<div style="background:linear-gradient(to right,#396c89,#2c4d64,#1b2838);height:1px;"></div>
+					<div class="content"></div>
+					<div class="intro_img"><img src=""/></div>
+					<div class="blank"></div>
+				</div>
+			</div>
+			<!--右边-->
+			<div class="right_model">
+				<div class="rm_block">0</div>
+				<div class="rm_block">1</div>
+				<div class="rm_block">2</div>
+				<div class="rm_block">3</div>
+			</div>
+		</div>
+
+
+		<div class="introduce_block">
+			<div class="forum">
+				<!--左边-->
+				<div class="forum_title">
+					<span>消费者的评价</span>
+					<span class="forum_but"><button id="forum_but">立即评价</button></span>
+					<span id="notice" style="display: none;color: red">请登录后再评价</span>
+				</div>
+
+				<form action="" id="subForum" >
+					<input type="hidden" id="forumUserId" name="userId"/>
+					<input type="hidden" id="forumItemId" name="itemId"/>
+					<div class="forum_inp" id="forum_inp" style="display: none">
+						<textarea type="text" id="forumContemt" name="forumContemt" ></textarea>
+						<script type="text/javascript">CKEDITOR.replace('forumContemt');</script>
+						<div class="forum_inp_but">
+							<span>选择对该产品的总体评价：</span>
+							<span class="inp_rad"><input type="radio" name="praise" value="0" checked />推荐</span>
+							<span class="inp_rad"><input type="radio" name="praise" value="1"  />不推荐</span>
+							<button id="forumSend">提交</button>
+						</div>
+					</div>
+				</form>
+
+				<div class="forum_main" id="forum_list">
+
+					<!--<div class="forum_line"></div>
+					<div class="model_forum">
+						<div class="forum_left">
+							<div class="forum_img"><img src="images/renwu.ico"/></div>
+							<div class="forum_name">用户名</div>
+						</div>
+						<div class="forum_right">
+							<div class="estimate">
+								<img src="/images/zan.png"/>
+							</div>
+							<div class="es_tit">发布于：9月6号</div>
+							<div class="forum_content">游戏是好游戏，能进去就更完美了</div>
+							<div class="forum_button">
+								<span class="forum_but1"><button>回复</button></span>
+								<span id="notice1" style="display: none;color: red">请登录后再评价</span>
+							</div>
+
+							<form action="" id="subForumSon">
+								<input type="text" id="forumSonUserId" name="userId" value=""/>
+								<input type="text" id="parentId" name="parentId" value=""/>
+								<input type="text" id="forumSonItemId" name="itemId" value=""/>
+								<div class="forum_filsInput" id="forum_inp1" style="display: none">
+									<textarea  type="text" name="forumContemt" value="" ></textarea>
+									<button id="forumSend1">提交</button>
+								</div>
+							</form>
+
+
+							<div class="forum_line"></div>
+
+							<div class="forum_fils">
+								<div class="fils_block">
+									<div class="fils_left">
+										<div class="fils_img">图像</div>
+										<div class="fils_name">ghffggdsbncvn名</div>
+									</div>
+									<div class="fils_right">
+										<div class="fils_tit">
+
+											<div class="fils_time">发布于：9月6号</div>
+										</div>
+										<div class="fils_conten">
+											00000000000<br/>
+											111111<br/>
+											00000000000<br/>
+											111111<br/>
+										</div>
+									</div>
+								</div>
+								<div class="fils_line"></div>
+							</div>
+						</div>
+					</div>
+					<div class="air"></div>-->
+
+				</div>
+
+			</div>
+		</div>
+
+
+	</div>
+	<div id="footer"></div>
+
+<script type="text/javascript" >
+	/*加载页头页尾*/
+	$(function() {
+		$('#header').load('header.html');
+		$('#footer').load('footer.html');
+	});
+
+
+	//在URL中取值
+	function GetRequest() {
+		let x = location.search;
+		let url = decodeURI(x);   //传过来的url如带有中文字符，取出来进行转码成utf8
+		var theRequest = new Object();
+		if (url.indexOf("?") != -1) {
+			let str = url.substr(1);
+			let strs = str.split("&");
+			for (var i = 0; i < strs.length; i++) {
+				theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+			}
+		}return theRequest;}
+
+	let Request = new Object();
+	Request = GetRequest();
+	let itemId = Request['itemId'];
+	$(document).ready(function() {
+		$.ajax({
+			url: '/item/itemDetail',
+			type: 'POST',
+			data: {itemId: itemId},
+			success: function (result) {
+				let detailData = result.data;
+				/*0价格免购*/
+				if(detailData.price==0){
+					$("#b_buy_1").css("display","none");
+					$("#b_buy_2").css("display"," block");
+				}if(detailData.price!=0){
+					$("#b_buy_1").css("display","block");
+					$("#b_buy_2").css("display"," none");
+				}
+				let DetailImgList = detailData.image;
+				$("#goodsId").val(detailData.itemId);  /*itemId==goodsId*/
+				$("#goodsTitle").val(detailData.title);
+				$("#developer").val(detailData.developer);
+				$("#goodsImgmain").val(detailData.imgMain);
+				$("#goodsPrice").val(detailData.price);
+
+				$("#item").html(detailData.itemName);
+				$("#itemName").html(detailData.itemName);
+				$(".buy_ti").html(detailData.itemName);
+				$("#by_pr").html("￥" + detailData.price);
+				$("#mainImg").attr("src", "image/" + detailData.itemId + "/" + detailData.imgMain);
+				$("#vice-img").attr("src", "image/" + detailData.itemId + "/" + detailData.image[0].imgAdd);
+				$("#introduce").html(detailData.introduce);
+				let imgList = "";
+				for (let i in DetailImgList) {
+					let url = "image/" + detailData.itemId + "/" + DetailImgList[i].imgAdd;
+					imgList += "<div class=\"bar\"><img id=\"imgli\" src=\"" + url + "\"/></div>"
+					//alert(imgList);
+				}
+				$(".leftb").html(imgList);/*列表渲染*/
+				/*鼠标点击列表*/
+				$(".bar img").click(function () {
+					let va = $(this).attr('src');  /*获取当前标签的属性值*/
+					$("#mainImg").attr("src", va);  /*将当前标签的属性值src赋值给主图片*/
+					$(this).css("border", "2px solid #FFFFFF");  /*给标签的样式赋值*/
+					$(this).parent().siblings().children().css("border", "");  /*当前节点父节点的所有兄弟节点的子节点*/
+				});
+			}
+		});
+
+		/*项目介绍列表*/
+		$.ajax({
+			url: 'introduce/introduceList',
+			type: 'POST',
+			data: {itemId: itemId},
+			success: function (result) {
+				let introduce = result.data;
+				let introduceList = "";
+				for (let i in introduce) {
+					let introTitle = introduce[i].introTitle != null ? introduce[i].introTitle : "";  /*三目去空值*/
+					let introContent = introduce[i].content != null ? introduce[i].content : "";
+					let introImg = "image/" + itemId + "/" + introduce[i].img;   /*if去空值*/
+					if (introduce[i].img == null) {
+						introImg = "";
+					} else {
+						introImg = "image/" + itemId + "/" + introduce[i].img;
+					}
+					introduceList +=
+							"<div class=\"intro_block\">" +
+							"<div class=\"intro_title\">" + introTitle + "</div>" +
+							"<div style=\"background:linear-gradient(to right,#396c89,#2c4d64,#1b2838);height:1px;\"></div>" +
+							"<div class=\"content\">" + introContent + "</div>" +
+							"<div class=\"intro_img\"><img src=\"" + introImg + "\"/></div>" +
+							"<div class=\"blank\"></div>" +
+							"</div>"
+				}
+				$("#detail_introduce").html(introduceList);
+			}
+		})
+	});
+
+	/*项目评论列表*/
+	$(document).ready(function(){
+		//alert(1);
+		ajax1 = $.ajax({
+			url: '/forum/forumList',
+			type: 'POST',
+			data: {itemId: itemId},
+			success: function (result) {
+				let forum = result.data;
+				function forumtree(forum) {
+					let html = "";
+					for (let i in forum) {
+						let zancai = forum[i].praise==0?'/images/zan.png':'/images/cai.png';
+						html +=
+								'<div class="forum_line"></div><div class="model_forum"><div class="forum_left"><div class="forum_img">' +
+								'<img src="/user/' + forum[i].userId + '/' + forum[i].img + '"/></div>' +
+								'<div class="forum_name">' + forum[i].userName + '</div>' +
+								'</div><div class="forum_right"><div class="estimate">' +
+								'<img src="'+ zancai +'"/>' +
+								'</div><div class="es_tit">发布于：' + forum[i].forumData + '</div>' +
+								'<div class="forum_content">' + forum[i].forumContemt + '</div>' +
+								'<div class="forum_button"><span class="forum_but1"><button>回复</button></span>' +
+								'<span id="notice1" style="display: none;color: red">请登录后再评价</span></div>'+
+								'<form action="" id="subForumSon">'+
+								'<input type="hidden" id="forumSonUserId" name="userId" value="'+ userId +'"/>'+
+								'<input type="hidden" id="forumSonItemId" name="itemId" value="'+ itemId +'"/>'+
+								'<div class="forum_filsInput" id="forum_inp1" style="display: none">'+
+								'<input type="hidden" id="parentId" name="parentId" value="'+ forum[i].forumId +'"/>'+
+								'<textarea  type="text" id="forumContemtSon" name="forumContemt" value="" ></textarea>'+
+								'<button class="forumSend1">提交</button>'+
+								'</div>'+
+								'</form>'+
+								'<div class="forum_line"></div>' ;
+
+						if (forum[i].childForum!=null) {
+							let forumSon = "";
+							for(let j in forum[i].childForum){
+								forumSon +=
+									'<div class="forum_fils"><div class="fils_block"><div class="fils_left"><div class="fils_img">' +
+									'<img src="/user/'+ forum[i].childForum[j].userId + '/' + forum[i].childForum[j].img +'"/></div>' +
+									'<div class="fils_name">'+ forum[i].childForum[j].userName +'</div>' +
+									'</div><div class="fils_right"><div class="fils_tit">' +
+									'<div class="fils_time">发布于：'+ forum[i].childForum[j].forumData +'</div> </div>' +
+									'<div class="fils_conten">'+ forum[i].childForum[j].forumContemt +'</div>' +
+									'</div></div><div class="fils_line"></div></div>'
+							}
+								html += forumSon;
+						}
+							html+= '</div></div><div class="air"></div>'
+					}
+						return html;
+				}
+				$("#forum_list").html(forumtree(forum));
+			}
+		});
+		//alert(2);
+
+		$.when(ajax1).done(function () {
+			/*setTimeout(function(){*/
+				/*点击按钮弹出及隐藏评价框*/
+				$(".forum_but1").click(function () {
+					let elem = $(this).parent().parent().children('#subForumSon').children('#forum_inp1');  /*指定元素*/
+					if (userId == '' || userId == null) {
+						$(this).siblings('#notice1').css('display', 'block');
+					} else {
+						if (elem.is(':hidden')) {
+							elem.show();
+						} else {
+							elem.hide();
+						}
+					}
+				});
+
+				/*提交子评论*/
+				//alert(5);
+				$(".forumSend1").click(function () {
+					//alert(7);
+					let parentId = $(this).siblings('#parentId').val();
+					let forumContemt = $(this).siblings("#forumContemtSon").val();
+					let formData = new FormData();
+					formData.append('parentId', parentId); //添加参数
+					formData.append('itemId', itemId);
+					formData.append('userId', userId);
+					formData.append('forumContemt', forumContemt);
+					$.ajax({
+						url: "/forum/addForum",
+						type: "post",
+						dataType: 'json',
+						data: formData,
+						processData: false, // 告诉jQuery不要去处理发送的数据
+						contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+						success: function (result) {
+							alert(result);
+							if (result.success) {
+								$('#forum_inp1').css('display', 'none')
+								location.replace(location.href); /*刷新当前页面*/
+							}
+						},
+					})
+				});
+			/*}, 1000); /!*延时*!/*/
+		})
+
+
+
+
+
+
+	});
+
+	let userId;   let phone;
+	if(sessionStorage.getItem('userSession')!=null){
+		userId = JSON.parse(sessionStorage.getItem('userSession')).userId;
+		phone = JSON.parse(sessionStorage.getItem('userSession')).phone;
+		$("#userId").val(userId);
+		$("#phone").val(phone);
+	}else {
+		userId='';
+		phone=0;
+	}
+	$("#forumUserId").val(userId);
+	$("#forumItemId").val(itemId);
+
+
+
+		//生成商品订单号
+	let date = new Date();
+	let dateString = JSON.stringify(date); //将时间生成字符串
+	let snum = dateString.replace(/[^0-9]/ig,""); //去除非数字字符
+	let sjnum = Math.floor(Math.random()*80 + 10); //取随机2位数
+	let gid = $("#goodsId").val();
+	let uid = $("#userId").val();
+	let ordergoodsId = 'G'+snum+uid+gid+sjnum ;
+	$("#ordergoodsId").val(ordergoodsId);
+
+	//生成支付单号
+	let xx = snum.substring(snum.length-7); //取字符串的后7位
+	let payId = 'P'+xx+uid+sjnum;
+	$("#payId").val(payId);
+
+	//生成商品ordersId
+	let ordersId = Math.floor(Math.random()*899999 + 100000); //取随机6位数
+	$("#ordersId").val(ordersId);
+
+		//form表单对象化
+		$.fn.parseForm = function () {
+			let serializeObj = {};
+			let array = this.serializeArray();
+			let str = this.serialize();
+			$(array).each(function () {
+				if (serializeObj[this.name]) {
+					if ($.isArray(serializeObj[this.name])) {
+						serializeObj[this.name].push(this.value);
+					} else {serializeObj[this.name] = [serializeObj[this.name], this.value];}
+				} else {serializeObj[this.name] = this.value;}
+			});return serializeObj;};
+
+		/*加入到购物车*/
+		$("#addshopping").click(function () {
+			if(userId==0){
+				location.href = "login.html"
+			}else {
+				$.ajax({
+					url: '/order/addOrer',
+					type: 'POST',
+					dataType:"json",
+					data: $('#addShoppingCart').serialize(),
+					success: function (result) {
+						console.log(result);
+						$("#addshopping").attr({"disabled":"disabled"});
+						$("#addshopping").attr({"style":"background-color: #A9A9A9;"});
+					}
+				})
+			}
+		})
+
+		/*加入到个人中心我的项目列表*/
+		$("#addshopping1").click(function () {
+			if(userId==0){
+				location.href = "login.html"
+			}else {
+				$.ajax({
+					url: '/order/addOrerNP',
+					type: 'POST',
+					dataType:"json",
+					data: $('#addShoppingCart').serialize(),
+					success: function (result) {
+						console.log(result);
+						$("#addshopping1").attr({"disabled":"disabled"});
+						$("#addshopping1").attr({"style":"background-color: #A9A9A9;"});
+					}
+				})
+			}
+		});
+
+		/*点击按钮弹出及隐藏评价框*/
+		$(".forum_but").click(function () {
+			if(userId==''||userId==null){
+				$("#notice").css('display','block');
+			}else{
+				if($("#forum_inp").is(':hidden')){
+					$("#forum_inp").show();
+				}else{
+					$("#forum_inp").hide();
+				}
+			}
+		});
+
+
+		/*提交主评论*/
+		/*刷新CK编辑器里的内容*/
+		function CKupdate() {
+			for ( instance in CKEDITOR.instances ) {CKEDITOR.instances[instance].updateElement();}
+		}
+		/*提交主评论*/
+		$("#forumSend").click(function () {
+			CKupdate();
+			$.ajax({
+				url: "/forum/addForum",
+				type: "post",
+				dataType: 'json',
+				data: $('#subForum').serialize(),
+				success: function (result) {
+					if(result.success){
+						$('#forum_inp').css('display', 'none')
+					}
+				},
+			})
+		});
+
+
+
+
+
+
+
+
+
+
+	</script>
+
+</body>
+</html>

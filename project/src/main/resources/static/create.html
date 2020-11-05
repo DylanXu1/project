@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html  lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- for 360 -->
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-transform"> <!-- for baidu -->
+    <meta name="MobileOptimized" content="width"><!-- for baidu -->
+    <meta name="HandheldFriendly" content="true"><!-- for baidu -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>创建账户</title>
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./css/xadmin.css">
+    <link rel="stylesheet" href="./css/herder.css" charset="utf-8">
+    <link rel="stylesheet" href="./css/create.css" charset="utf-8">
+
+    <script type="text/javascript" src="./js/jquery-3.4.1.js"></script>
+    <script type="text/javascript" src="./js/common.js"></script>
+
+</head>
+
+<body class="create_br">
+    <div id="header"></div>
+    <div class="create_bg">
+        <div class="create">
+            <form method="Post" id="create_user" >
+                <div class="cr_create">
+                    <div class="cr_title">创&nbsp;建&nbsp;您&nbsp;的&nbsp;帐&nbsp;户</div><br/>
+                    <input  type="hidden" id="userKind" name="userKind" value="1"/>
+                    <input  type="hidden" id="userType" name="userType" value="4"/>
+                    <input  type="hidden" id="userId" name="userId" value=""/>
+                    <div class="lo_hint">用户名：</div>
+                    <input class="lo_input" type="text" id="userName" name="userName" /><br/><br/>
+                    <div class="lo_hint">手机号码：</div>
+                    <input class="lo_input" type="text" id="phone" name="phone" /><br/><br/>
+                    <div class="lo_hint">电子邮件地址：</div>
+                    <input class="lo_input" type="text" id="email" name="email" /><br/><br/>
+                    <span class="lo_hint">性别：</span>
+                    <span class="lo_input"><input type="radio" name="praise" value="0" checked />男</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="lo_input"><input type="radio" name="praise" value="1"  />女</span><br/><br/>
+                    <div class="lo_hint">登录密码</div>
+                    <input class="lo_input" type="password" id="password" name="password" /><br/><br/>
+                    <input class="cr_bu" name="commit" id="commit"  value="创建"  type="button">
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="footer"></div>
+<script type="text/javascript" >
+    $(function() {
+        $('#header').load('header.html');
+        $('#footer').load('footer.html');
+    });
+
+    let userId = Math.floor(Math.random()*899999999999 + 100000000000); //随即成生12位整数
+    $("#userId").val(userId);
+
+    //form表单对象化
+    $.fn.parseForm = function () {
+        let serializeObj = {};
+        let array = this.serializeArray();
+        let str = this.serialize();
+        $(array).each(function () {
+            if (serializeObj[this.name]) {
+                if ($.isArray(serializeObj[this.name])) {
+                    serializeObj[this.name].push(this.value);
+                } else {serializeObj[this.name] = [serializeObj[this.name], this.value];}
+            } else {serializeObj[this.name] = this.value;}
+        });return serializeObj;};
+
+
+        $("#commit").click(function () {
+            $.ajax({
+                url: "/user/addUser",
+                type: "post",
+                dataType: 'json',
+                data: $('#create_user').serialize(),
+                success: function (result) {
+                    if (result.success.valueOf() == true){
+                        location.href = "login.html"
+                    }else{
+                        $("#lb").show();
+                        //alert("密码错误");
+                    }
+                }
+            })
+        })
+
+
+
+</script>
+
+
+</body>
+</html>

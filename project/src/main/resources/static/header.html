@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html class="bit-html mobile-false js_active  vc_desktop  vc_transform  vc_transform  csstransforms csstransforms3d csstransitions no-touch" dir="ltr" lang="zh-CN"><!--<![endif]-->
+
+
+<body class="br">
+<header>
+	<!--<div class="header">-->
+		<!--头部logo-->
+		<div class="logo" >
+			<img class="logoimg" src="images/logologo.png" />
+		</div>
+		<!--头部工具条 -->
+		<div class="title">
+			<ul class="nav" >
+				<li class="nav-item" >
+					<a href="index.html"><span>首页</span></a>
+				</li>
+				<li class="nav-item">
+					<a href="teaching.html?groupId=101"><span>VR动态</span></a>
+				</li>
+				<li class="nav-item" >
+					<a href="interactive.html?groupId=102"><span>VR互动空间</span></a>
+				</li>
+				<li class="nav-item">
+					<a href="material.html?groupId=103"><span>VR模型素材库</span></a>
+				</li>
+				<li class="nav-item">
+					<a href="anthropometric.html?groupId=104"><span>VR人体建模模型库</span></a>
+				</li>
+				<li class="nav-item">
+					<a href="forum.html?groupId=105"><span>VR论坛</span></a>
+				</li>
+				<li class="nav-item">
+					<a href="repository.html?groupId=106"><span>VR知识库</span></a>
+				</li>
+			</ul>
+
+		</div>
+		<div class="title_button">
+
+			<!--登录按钮 -->
+			<div class="btn" title="登录">
+				<a href="login.html" >
+					<img src="images/login_img.png"  style="width:40px"/>
+				</a>
+			</div>
+			<!--个人中心 -->
+			<div class="btn" id="personalCenter" title="个人中心" style="display: none">
+				<a href="personal.html" >
+					<img src="images/personal.png"  style="width:40px"/>
+				</a>
+			</div>
+			<!--购物车 -->
+			<div class="btn" title="购物车">
+				<a href="shopping.html" >
+					<img src="images/shippingCar.png"  style="width:40px"/>
+				</a>
+			</div>
+			<!--搜索按钮-->
+			<div class="btn" title="搜索">
+				<a  data-title="搜索教程" data-placeholder="请输入" data-posttype="post" >
+					<img src="images/search.png"  style="width:40px"/>
+				</a>
+			</div>
+		</div>
+	<!--</div>-->
+</header>
+<script type="text/javascript" >
+	let userSessionInfo = sessionStorage.getItem('userSession');
+	if(userSessionInfo==null){
+		$("#personalCenter").css('display', 'none');
+	}if(userSessionInfo!=null){
+		img = JSON.parse(userSessionInfo).img;
+		userId = JSON.parse(userSessionInfo).userId;
+		imgSrc = '/user/'+userId+'/'+img;
+		$.ajax({
+			url : imgSrc,
+			type : 'HEAD',
+			success : function() {
+				$("#personalCenter").children().children().attr('src', imgSrc);
+				$("#personalCenter").css('display', 'block');
+			},
+			error : function() {
+				$("#personalCenter").children().children().attr('src', '/images/renwu.png');
+				$("#personalCenter").css('display', 'block');
+			}
+		});
+	}
+</script>
+	
+</body>
+</html>

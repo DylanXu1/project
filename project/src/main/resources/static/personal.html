@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html class="bit-html mobile-false js_active  vc_desktop  vc_transform  vc_transform  csstransforms csstransforms3d csstransitions no-touch" dir="ltr" lang="zh-CN"><!--<![endif]-->
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="renderer" content="webkit"> 
+	<meta http-equiv="Cache-Control" content="no-transform"> <!-- for baidu -->
+    <meta name="MobileOptimized" content="width"><!-- for baidu -->
+    <meta name="HandheldFriendly" content="true"><!-- for baidu -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">	
+	<title>个人中心</title>
+	<link rel="stylesheet" href="./lib/layui/css/layui.css" charset="utf-8">
+	<link rel="stylesheet" href="./css/herder.css" charset="utf-8">
+	<link rel="stylesheet" href="./iconfonts/iconfont.css" charset="utf-8">
+	<link rel="stylesheet" href="./css/personal.css" charset="utf-8">
+	<script type="text/javascript" src="./js/jquery-3.4.1.js"></script>
+	<script type="text/javascript" src="./lib/layui/layui.js"  charset="utf-8" ></script>
+
+</head>
+
+
+<body class="br">
+	<div id="header"></div>
+	
+	<!--正文部分 -->
+	<div class="body">
+		<div class="navleft">
+			<div class="side-nav">
+				<div class="person_info">
+					<div class="person_img" ><img id="userImgInfo" src=""/></div>
+					<div class="person_name" id="personName">name</div>
+				</div>
+				<ul id="nav">
+					<li>
+						<i class="iconfont icon-renwu3"></i>
+						<a href="javascript:;" class="personalCenter" id="personal_info"><span>个人信息</span></a>
+					</li>
+					<li>
+						<i class="iconfont icon-xiangmu1"></i>
+						<a href="javascript:;" class="personalCenter" id="lib_center"><span>资源中心</span></a>
+					</li>
+					<li>
+						<i class="iconfont icon-pinglun"></i>
+						<a href="javascript:;" class="personalCenter" id="my_comment"><span>我的评论</span></a>
+					</li>
+				</ul>
+			</div>
+
+		</div>
+
+		<div class="rightblock">
+			<div class="active_title">
+				<div class="active" id="myInfo">我的资料</div>
+				<div class="active" id="myImg">头像设置</div>
+				<div class="active" id="myPassword">修改密码</div>
+			</div>
+			<!--<div class="line"></div>-->
+
+			<div class="active_block" >
+				<div class="active_stick"><span >用户名:</span><span id="userName"></span></div>
+				<div class="active_stick"><span>手机号:</span><span id="userPhone"></span></div>
+				<div class="active_stick"><span>邮  箱:</span><span id="userEmail"></span></div>
+				<div class="active_stick"><span>性  别:</span><span id="userSex"></span></div>
+			</div>
+
+
+			<div class="active_block" id="userImg" style="display: none"><!---->
+				<form action=""  method="post" enctype="multipart/form-data" target="frameName" class="layui-form"><!--id=""-->
+					<input type="hidden" id="userId" name="userId" value="">
+					<div class="img_b">
+						<div class="bu"><!--添加图像按钮-->
+							<input class="change" type="file" id="personImg" name="personImgst" accept="image/*" multiple="multiple" οnchange="changImg(event)" >
+						</div>
+						<div class="per_img" id="mainimg"></div>
+						<div class="state">你可以上传JPG、GIF或PNG格式的文件，文件大小不能超过1M</div>
+						<div class="img_button">
+							<!--<button id="pers_img" lay-filter="add" lay-submit="" onclick="save()">上传</button>-->
+							<input class="cr_bu" name="commit" id="commit"  value="上传"  type="button">
+						</div>
+					</div>
+				</form>
+				<iframe id="id_iframe1" name="frameName" style="display:none;"></iframe><br/>
+			</div>
+			
+
+			<div class="active_block" style="display: none"><!---->
+				<form action=""   id="commitPassword" class="layui-form" target="frameName"><!--id=""-->
+					<input type="hidden"  id="myPhone" name="phone" vlaue="" >
+					<div class="pa_block">
+						<div class="pa_row">
+							<div class="pa_n">当前密码:</div>
+							<div class="pa_in">
+								<input class="" type="password" id="password" name="password" lay-verify="required"><!--lay-verify="required"-->
+							</div>
+							<div class="pa_t" id="checkPassword" style="display: none">密码不正确</div><!--style="display: none"-->
+						</div>
+
+						<div class="pa_row">
+							<div class="pa_n">新密码:</div>&nbsp;&nbsp;&nbsp;
+							<div class="pa_in">
+								<input class="" type="password" id="passwordnew" name="passwordnew" lay-verify="required">
+							</div>
+						</div>
+
+						<div class="pa_row">
+							<div class="pa_n">确认密码:</div>
+							<div class="pa_in">
+								<input class="" type="password" id="passwordnew1" name="passwordnew1" lay-verify="required">
+							</div>
+							<div class="pa_t" id="confirmpassword" style="display: none">确认密码不一致</div>
+						</div>
+
+						<div class="pa_row">
+							<div class="pa_but">
+								<button id="passwordSave"  lay-submit="">保存</button>
+							</div>
+						</div>
+					</div>
+				</form>
+				<iframe id="id_iframe2" name="frameName" style="display:none;"></iframe><br/>
+			</div>
+
+		</div>
+	</div>
+	<div id="footer"></div>
+
+<script type="text/javascript" >
+	layui.use(['form', 'layer'], function() {
+		var form = layui.form,
+		layer = layui.layer;
+
+		/*加载页头页尾*/
+		$(function () {
+			$('#header').load('header.html');
+			$('#footer').load('footer.html');
+		})
+
+		let userId; let userName; let phone; let email; let sex; let img;
+		let userSessionInfo = sessionStorage.getItem('userSession');
+		if (userSessionInfo != null) {
+			userId = JSON.parse(userSessionInfo).userId;
+			phone = JSON.parse(userSessionInfo).phone;
+			userName = JSON.parse(userSessionInfo).userName;
+			email = JSON.parse(userSessionInfo).email;
+			sex = JSON.parse(userSessionInfo).sex;
+			img = JSON.parse(userSessionInfo).img;
+		} else {
+			userId = '';
+			phone = 0;
+			img = '';
+		}
+
+		/*我的资料*/
+		$("#userName").html(userName);
+		$("#userPhone").html(phone);
+		$("#myPhone").val(phone);
+		$("#userEmail").html(email);
+		$("#userSex").html(sex==0?'男':sex==1?'女':'未知');
+		$("#personName").html(userName);
+		$("#userId").val(userId);
+		let userImgInfoSrc = '/user/' + userId + '/' + img;
+		setUserImg();
+
+		/*加载图像*/
+		function setUserImg() {
+			$("#userImgInfo").attr('src', userImgInfoSrc);
+		}
+
+		/*更新图像*/
+		$("#commit").click(function () {
+			let formData = new FormData();
+			formData.append('personImg', document.getElementById('personImg').files[0]); //添加图片信息的参数
+			formData.append('userId', userId); //添加其他参数
+			$.ajax({
+				url: "/file/userImgUpload",
+				type: "post",
+				dataType: 'json',
+				data: formData,
+				processData: false, // 告诉jQuery不要去处理发送的数据
+				contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+				success: function (result) {
+					setUserImg();
+					layer.msg("图像修改成功，重新登录后图像会更新",{icon:6});
+				}
+			})
+		});
+
+		/*添加图片*/
+		$(document).on("change", "#personImg", function () {
+			let fr = new FileReader();
+			fr.readAsDataURL(this.files[0]);
+			fr.onload = function (ev) {
+				var img = $("<img style='width: 100%;max-height: 100%'/>");
+				img.prop("src", this.result);
+				//alert(this.result);
+				$("#mainimg").empty();
+				$("#mainimg").append(img);
+			}
+		});
+
+		/*修改密码*/
+		let passwordnew;
+		let passwordnew1;
+		$("#passwordnew1").mouseleave(function () {
+			passwordnew = $('#passwordnew').val();
+			passwordnew1 = $('#passwordnew1').val();
+			if (passwordnew != passwordnew1) {
+				$('#confirmpassword').css('display', 'block')
+			} else {
+				$('#confirmpassword').css('display', 'none')
+			}
+		});
+		$("#password").mouseleave(function (){
+			$('#checkPassword').css('display', 'none')
+		})
+
+		$("#passwordSave").click(function () {
+			passwordnew = $('#password').val();
+			$.ajax({
+				url: "/login/changePassword",
+				type: "post",
+				dataType: 'json',
+				data: $('#commitPassword').serialize(),
+				success: function (result) {
+					if(result.success){
+						layer.msg('修改成功',{icon:6});
+					}if(!result.success){
+						$('#checkPassword').css('display', 'block')
+					}
+				},
+			})
+		});
+
+		/*点击按钮，展示对应的模块*/
+		$('.active').click(function (e) {
+			$(this).css('background', '#5B8AC3');
+			$(this).siblings().css('background', '#8CA6C6');
+			let id = $(this).index()
+			$('.active_block').css({
+				display: 'none'
+			})
+			$($('.active_block')[id]).css({
+				display: 'block'
+			})
+		})
+
+		//单击某个元素打开
+		$("#lib_center").click(function () {
+			$(this).css('background', '#5B8AC3');
+			$(this).siblings().css('background', '#8CA6C6');
+			window.open('personal_resou.html');
+		});
+
+
+	});
+
+	</script>
+
+</body>
+</html>

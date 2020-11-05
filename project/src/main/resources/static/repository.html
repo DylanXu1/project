@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html  lang="zh-CN">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="renderer" content="webkit"> 
+	<meta http-equiv="Cache-Control" content="no-transform"> <!-- for baidu -->
+    <meta name="MobileOptimized" content="width"><!-- for baidu -->
+    <meta name="HandheldFriendly" content="true"><!-- for baidu -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">	
+	<title>VR知识库</title>
+	<link rel="stylesheet" href="./css/font.css">
+	<link rel="stylesheet" href="./css/xadmin.css">
+	<link rel="stylesheet" href="./css/herder.css" charset="utf-8">
+	<link rel="stylesheet" href="./css/teaching.css" charset="utf-8">
+	<script type="text/javascript" src="./js/jquery-3.4.1.js"></script>
+	<script type="text/javascript" src="./js/common.js"></script>
+</head>
+
+<body class="br">
+	<div id="header"></div>
+	<div id="footer44"></div>
+	<!--首页广告图片 -->
+	<div class="board">
+		<img src="images/slogan_2.png"/>
+	</div>
+	
+	<!--正文部分 -->
+	<div class="teach_title">VR知识库</div>
+	<div class="major">
+		<div class="teach_body">
+			<div class="teach_left">
+				<div class="menu_title">VR知识库</div>
+				<div class="air"></div>
+				<div class="menu_bac" id="categoryList">
+					<a href="#">
+						<div class="menu_content" >
+							<svg t="1602038343684" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1158" width="25" height="15">
+								<path d="M162.3 955.3c-24.1 0-43.7-19.6-43.7-43.7v-6.2l-6.2-0.7H26.8c-11.4 0-20.6-9.2-20.6-20.6V265.8c0-26.2 21.3-47.5 47.5-47.5h916.5c26.2 0 47.5 21.3 47.5 47.5v618.3c0 11.4-9.3 20.6-20.6 20.6h-91.8v6.2c0 24.8-19.6 44.4-43.7 44.4H162.3z" fill="#8a8a8a" p-id="1159"></path><!--82CD31-->
+								<path d="M970.2 224.6c22.7 0 41.2 18.5 41.2 41.2v618.3c0 7.9-6.5 14.4-14.4 14.4h-98v13.2c0 20.6-16.8 37.4-37.5 37.4H162.3c-20.7 0-37.5-16.8-37.5-37.4v-13.2h-98c-7.9 0-14.4-6.4-14.4-14.4V265.8c0-22.7 18.5-41.2 41.2-41.2h916.6m0-12.5H53.7c-29.7 0-53.7 24-53.7 53.7v618.3c0 14.8 12 26.8 26.9 26.8h85.5v0.7c0 27.6 22.4 49.9 50 49.9H861.6c27.6 0 50-22.3 50-49.9v-0.6h85.5c14.8 0 26.9-12 26.9-26.8V265.8c-0.1-29.6-24.1-53.7-53.8-53.7z" fill="#77C029" p-id="1160"></path>
+								<path d="M137.3 830.7c-10.3 0-18.7-8.4-18.7-18.7V112.4c0-24.1 19.6-43.7 43.7-43.7H861.6c24.1 0 43.7 19.6 43.7 43.7v699.5c0 10.3-8.4 18.7-18.7 18.7H137.3z" fill="#8a8a8a" p-id="1161"></path>
+								<path d="M861.6 75c20.7 0 37.5 16.8 37.5 37.5V812c0 6.9-5.6 12.5-12.5 12.5H137.3c-6.9 0-12.5-5.6-12.5-12.5V112.4c0-20.7 16.8-37.5 37.5-37.5H861.6m0-12.4H162.3c-27.6 0-50 22.4-50 50V812c0 13.8 11.2 25 25 25H886.6c13.8 0 25-11.2 25-25V112.4c-0.1-27.6-22.4-49.9-50-49.9z" fill="#77C029" p-id="1162"></path>
+							</svg>
+							<span id=""><!--VR教学资源动态--></span>
+						</div>
+					</a>
+				</div>
+			</div>
+			<div class="teach_right">
+				<div class="content_title"><div class="title_tex">你所在的位置：首页 >  VR教学资源 >  VR教学资源动态 > 列表</div></div>
+				<div class="air"></div>
+				<input type="hidden" id="category_value" value=""/>
+				<!--article List-->
+				<div class="content_back" id="teaching_list">
+					<ul class="clauseTitleList"></ul>
+				</div>
+				<!--article Detail-->
+				<div class="content_back" id="teaching_content"></div>
+				<div class="content_butt" id="teaching_buttom"></div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="button_co"></div>
+	<div class="air"></div>
+	<div class="foot">
+		<div id="footer"></div>
+	</div>
+
+
+<script type="text/javascript" >
+	/*加载页头页尾*/
+	$(function() {
+		$('#header').load('header.html');
+		$('#footer').load('footer.html');
+	})
+
+	function GetRequest() {
+		let x = location.search;
+		let url = decodeURI(x);
+		var theRequest = new Object();
+		if (url.indexOf("?") != -1) {
+			let str = url.substr(1);
+			strs = str.split("&");
+			for (var i = 0; i < strs.length; i++) {
+				theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+			}}return theRequest;}
+
+	let Request = new Object();
+	Request = GetRequest();
+	let groupId = Request['groupId'];
+
+	/*左侧菜单*/
+	$(document).ready(function(){
+		let html = "";
+		$.ajax({
+			url: '/teach/categoryList',
+			type: 'POST',
+			data: {groupId: groupId},
+			success: function (result) {
+				let dataList = result.data;
+				let categoryId = dataList[0].categoryId;
+				let a =
+					'<a href="javascript:;"><div class="menu_content" >' +
+					'<svg t="1602038343684" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1158" width="40" height="15"><path d="M162.3 955.3c-24.1 0-43.7-19.6-43.7-43.7v-6.2l-6.2-0.7H26.8c-11.4 0-20.6-9.2-20.6-20.6V265.8c0-26.2 21.3-47.5 47.5-47.5h916.5c26.2 0 47.5 21.3 47.5 47.5v618.3c0 11.4-9.3 20.6-20.6 20.6h-91.8v6.2c0 24.8-19.6 44.4-43.7 44.4H162.3z" fill="#3F3F3F" p-id="1159"></path><path d="M970.2 224.6c22.7 0 41.2 18.5 41.2 41.2v618.3c0 7.9-6.5 14.4-14.4 14.4h-98v13.2c0 20.6-16.8 37.4-37.5 37.4H162.3c-20.7 0-37.5-16.8-37.5-37.4v-13.2h-98c-7.9 0-14.4-6.4-14.4-14.4V265.8c0-22.7 18.5-41.2 41.2-41.2h916.6m0-12.5H53.7c-29.7 0-53.7 24-53.7 53.7v618.3c0 14.8 12 26.8 26.9 26.8h85.5v0.7c0 27.6 22.4 49.9 50 49.9H861.6c27.6 0 50-22.3 50-49.9v-0.6h85.5c14.8 0 26.9-12 26.9-26.8V265.8c-0.1-29.6-24.1-53.7-53.8-53.7z" fill="#77C029" p-id="1160"></path><path d="M137.3 830.7c-10.3 0-18.7-8.4-18.7-18.7V112.4c0-24.1 19.6-43.7 43.7-43.7H861.6c24.1 0 43.7 19.6 43.7 43.7v699.5c0 10.3-8.4 18.7-18.7 18.7H137.3z" fill="#3F3F3F" p-id="1161"></path><path d="M861.6 75c20.7 0 37.5 16.8 37.5 37.5V812c0 6.9-5.6 12.5-12.5 12.5H137.3c-6.9 0-12.5-5.6-12.5-12.5V112.4c0-20.7 16.8-37.5 37.5-37.5H861.6m0-12.4H162.3c-27.6 0-50 22.4-50 50V812c0 13.8 11.2 25 25 25H886.6c13.8 0 25-11.2 25-25V112.4c-0.1-27.6-22.4-49.9-50-49.9z" fill="#77C029" p-id="1162"></path></svg>'
+				for(let i in dataList){
+					let categoryName = dataList[i].categoryName;
+					let categoryId = dataList[i].categoryId;
+					html +=
+							a + '<span class="categoryId" data="'+ categoryId +'">' + categoryName + '</span></div></a>'
+				}
+				$("#categoryList").html(html);
+				$("#teaching_list").show();
+				$("#teaching_content").hide();
+				clauseTitleList();
+				//点击左菜单
+				$(".menu_content").click(function(){
+					let categoryId = $(this).children('span').attr('data');
+					$("#category_value").val(categoryId); //赋值到input
+					$(this).children().children('path').attr('fill','#16E0FC'); //点击图标
+					$(this).css('font-size','20px');    //点击字体
+					$(this).parent().siblings().children().children().children().attr('fill','#3F3F3F');  //图标
+					$(this).parent().siblings().children().css('font-size','16px'); //字体
+					$("#teaching_list").show();
+					$("#teaching_content").hide();
+					clauseTitleList()
+				});
+			}
+		})
+	})
+
+	/*右端列表展示*/
+	function clauseTitleList() {
+		let categoryId = $("#category_value").val();
+		let html = "";
+		$.post("/teach/clauseList", {categoryId}, function (result) {
+			let dataList = result.data;
+			for (let i in dataList) {
+				html +=
+					'<li class="content_bar" data="' + dataList[i].teachId + '">' +
+						'<a href="javascript:;" ><span>' + dataList[i].clauseTitle + '</span></a>' +
+						'<span class="bar_dat">' + dataList[i].createTime + '</span></li>'
+			}
+			$(".clauseTitleList").html(html);
+			//点击右菜单
+			$(".content_bar").click(function(){
+				let teachId = $(this).attr('data');
+				$("#teaching_list").hide();
+				$("#teaching_content").show();
+				$("#teaching_buttom").show();
+				//teachDetail(teachId);
+				teachOtherDetail(teachId);
+			})
+		})
+	}
+
+	/*teachDetail details*/
+	function teachDetail(teachId) {
+		$.post("/teach/teachDetail", {teachId},function (result){
+			let dataDetail = result.data;
+			let clauseTitle = dataDetail.clauseTitle;
+			let creatData = dataDetail.dataDetail;
+			let viewCount = dataDetail.viewCount;
+			let clauseContent = dataDetail.clauseContent;
+			let html =
+					'<div class="con_title">' + clauseTitle + '</div>'+
+					'<div class="con_fla"><span>发布时间：</span><span>' + creatData + '</span>&nbsp;&nbsp;&nbsp;&nbsp;<span>浏览次数：</span><span>' + viewCount + '</span></div>'+
+					'<div class="con_con">' + clauseContent + '</div>'
+
+			$("#teaching_content").html(html);
+		})
+
+	}
+
+	/*内容展示同时查出上一篇及下一篇内容*/
+	function teachOtherDetail(teachId) {
+		$.post("/teach/teachOtherDetail", {teachId}, function (result) {
+			let dataDetailList = result.data;
+			let html = "";
+			for (let i in dataDetailList) {
+				if(dataDetailList.length==3){
+					let teachId0 = dataDetailList[0].teachId;
+					let teachId1 = dataDetailList[1].teachId;
+					let teachId2 = dataDetailList[2].teachId;
+					html =
+						'<div class="con_title">' + dataDetailList[1].clauseTitle + '</div>'
+						+'<div class="con_fla"><span>发布时间：</span><span>' + dataDetailList[1].createTime + '</span>&nbsp;&nbsp;&nbsp;&nbsp;<span>浏览次数：</span><span>' + dataDetailList[1].viewCount + '</span></div>'
+						+'<div class="con_con">' + dataDetailList[1].clauseContent + '</div>'
+						+'<div class="con_butt"><span >上一篇：</span><span onclick="teachOtherDetail('+ teachId0 +')"><a href="javascript:;">'+dataDetailList[0].clauseTitle+'</a></span></div>'
+						+'<div class="con_butt"><span >下一篇：</span><span onclick="teachOtherDetail('+ teachId2 +')"><a href="javascript:;">'+dataDetailList[2].clauseTitle+'</a></span></div>'
+				}if(dataDetailList.length==2 && dataDetailList[0].teachId == teachId){
+					let teachId0 = dataDetailList[0].teachId;
+					let teachId1 = dataDetailList[1].teachId;
+					html =
+						'<div class="con_title">' + dataDetailList[0].clauseTitle + '</div>'
+						+'<div class="con_fla"><span>发布时间：</span><span>' + dataDetailList[0].createTime + '</span>&nbsp;&nbsp;&nbsp;&nbsp;<span>浏览次数：</span><span>' + dataDetailList[0].viewCount + '</span></div>'
+						+'<div class="con_con">' + dataDetailList[0].clauseContent + '</div>'
+						+'<div class="con_butt"><span >上一篇：</span><span onclick="teachOtherDetail('+ teachId0 +')"><a href="javascript:;">'+"暂无内容"+'</a></span></div>'
+						+'<div class="con_butt"><span >下一篇：</span><span onclick="teachOtherDetail('+ teachId1 +')"><a href="javascript:;">'+dataDetailList[1].clauseTitle+'</a></span></div>'
+				}if(dataDetailList.length==2 && dataDetailList[1].teachId == teachId){
+					let teachId0 = dataDetailList[0].teachId;
+					let teachId1 = dataDetailList[1].teachId;
+					html =
+							'<div class="con_title">' + dataDetailList[1].clauseTitle + '</div>'
+							+'<div class="con_fla"><span>发布时间：</span><span>' + dataDetailList[1].createTime + '</span>&nbsp;&nbsp;&nbsp;&nbsp;<span>浏览次数：</span><span>' + dataDetailList[1].viewCount + '</span></div>'
+							+'<div class="con_con">' + dataDetailList[1].clauseContent + '</div>'
+							+'<div class="con_butt"><span >上一篇：</span><span onclick="teachOtherDetail('+ teachId0 +')"><a href="javascript:;">'+dataDetailList[0].clauseTitle+'</a></span></div>'
+							+'<div class="con_butt"><span >下一篇：</span><span onclick="teachOtherDetail('+ teachId1 +')"><a href="javascript:;">'+"暂无内容"+'</a></span></div>'
+				}
+
+			}
+			$("#teaching_content").html(html);
+		})
+	}
+
+
+
+
+
+	/*function teachOtherDetail(teachId) {
+		$.post("/teach/teachOtherDetail", {teachId}, function (result) {
+			let dataDetailList = result.data;
+			let html ="";
+			for (let i in dataList) {
+				let teachId = dataDetailList[i].teachId;
+				let clauseTitle = dataDetailList[i].clauseTitle;
+				alert(teachId);
+				html +=
+					'<span>上一篇：</span><span><a href="javascript:;">'+ dataDetailList[0].clauseTitle +'</a></span></br>'+
+					'<span>下一篇：</span><span><a href="javascript:;">'+ dataDetailList[1].clauseTitle +'</a></span>'
+			}
+
+
+
+			$("#teaching_content").html(html);
+		})
+	}*/
+
+
+	/*title list*/
+	/*function clauseTitleList() {
+		alert(5);
+		let categoryId = $("#category_value").val();
+		let html ="";
+		$.post("/teach/clauseTitleList",{categoryId},function(result){
+			alert(6);
+			let dataList = result.data;
+			let teachId = "";
+			for(let i in dataList){
+			html +=
+					'<li class="content_bar" data="'+ dataList[i].teachId +'"><a href="javascript:;" ><span>'+ dataList[i].clauseTitle +'</span></a><span class="bar_dat">'+ dataList[i].creatData+'</span></li>'
+			}
+			alert(7);
+			$(".clauseTitleList").html(html);
+			alert(8);
+			//alert(html);
+
+		});
+	}*/
+
+
+
+
+
+</script>
+
+			
+</body>
+</html>

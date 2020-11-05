@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        #container {
+            width: 200px;
+            min-height: 100px;
+            border: 1px solid #aaa;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+<h3>在服务器端下载的网页中呈现客户端的图片</h3>
+<div></div>
+<div id="container">
+
+</div>
+<script>
+
+    /*ondragover 事件在可拖动元素或选取的文本正在拖动到放置目标时触发。
+    默认情况下，数据/元素不能放置到其他元素中。 如果要实现改功,
+    能我们需要防止元素的默认处理方法。我们可以通过调用 e.preventDefault() 方法来实现 ondragover 事件。*/
+    document.ondragover = function(e){
+        e.preventDefault(); //使得ondrop可能触发（取消事件的默认动作）
+    }
+    document.ondrop = function(e){
+        e.preventDefault();//拖后放
+    }
+
+    ///为#container做释放事件的监听
+    container.ondragover = function(e){
+        e.preventDefault();//使得ondrop可能触发
+    }
+    container.ondrop = function(e){
+        //读取浏览器在源对象拖动时在“拖拉机”中保存的数据
+        //console.log(e.dataTransfer);
+        //console.log(e.dataTransfer.files); //FileList
+
+        //用户拖动进来的第0张图片
+        var f0 = e.dataTransfer.files[0];
+        //var f = e.dataTransfer.file;
+
+        //创建一个文件内容读取器——FileReader
+        var fr = new FileReader();
+        //读取文件中的内容 —— DataURL：一种特殊的URL地址，本身包含着所有的数据
+        fr.readAsDataURL(f0); //预览图片
+        fr.onload = function(){
+            console.log('文件中的数据读取完成')
+            console.log(fr.result);
+            var img = new Image();
+            img.src = fr.result; //dataURL
+            img.style.width="500px";
+            img.style.height="300px";
+            container.appendChild(img);
+            alert(fr.result);
+        }
+    }
+</script>
+</body>
+</html>

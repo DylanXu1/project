@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    <head>
+        <meta charset="UTF-8">
+        <title>欢迎页面-X-admin2.2</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+        <link rel="stylesheet" href="../css/font.css" charset="utf-8">
+        <link rel="stylesheet" href="../css/xadmin.css" charset="utf-8">
+        <script type="text/javascript" src="../js/jquery-3.4.1.js"></script>
+        <script type="text/javascript" src="../lib/layui/layui.js"  charset="utf-8" ></script>
+        <script type="text/javascript" src="../js/xadmin.js"></script>
+    </head>
+    
+    <body>
+        <div class="x-nav">
+            <span class="layui-breadcrumb">
+                <a href="">首页</a>
+                <a href="">人员管理</a>
+                <a><cite>学生列表</cite></a>
+            </span>
+        </div>
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body ">
+                        </div>
+                        <div class="layui-card-body ">
+                            <div class="layui-card-header">
+                                <button class="layui-btn" onclick="addStudent()" ><i class="layui-icon"></i>添加学生</button>
+                                <button class="layui-btn layui-btn-small"  onclick="location.reload()" title="刷新"><i class="layui-icon layui-icon-refresh"></i></button>
+                            </div>
+                            <div >
+                                <input  type="hidden" id="orgId" name="orgId" value=""   autocomplete="off" class="layui-input">
+                                <input  type="hidden" id="teacherId" name="teacherId" value=""  autocomplete="off" class="layui-input">
+                            </div>
+                            <table id="studentListByT" lay-filter="test"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+   <!-- <script type="text/html" id="toolbarDemo">
+        <div class = "layui-btn-container" > 
+            <button class = "layui-btn layui-btn-sm" lay-event = "getCheckData" > 获取选中行数据 </button>
+            <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button > 
+            <button class = "layui-btn layui-btn-sm" lay-event = "isAll" > 验证是否全选</button>
+        </div > 
+    </script>-->
+	
+    <script type="text/html" id="sex">
+	    {{#  if(d.sex=='0'){ }}男	   	
+	    {{#  }else{ }}女	        
+	    {{# } }}
+	</script>
+    
+    <script type="text/html" id="del">        
+    	<a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">禁用</a>
+    </script>
+   
+    <script>
+        layui.use(['laydate','table'], function() {
+            var laydate = layui.laydate;
+            var table = layui.table;
+        //监听表格复选框选择
+        table.on('checkbox(test)', function(obj){
+            console.log(obj)
+        });
+
+        let orgId = JSON.parse(sessionStorage.getItem('userSession')).orgId;
+        $('#orgId').val(orgId);
+        let userId = JSON.parse(sessionStorage.getItem('userSession')).userId;
+        $('#teacherId').val(userId);
+        //let tname = JSON.parse(sessionStorage.getItem('suSession')).tname;
+        table.render({
+            elem: '#studentListByT'       /*表格的id选择器*/
+            ,url: '/user/studentListByT'
+            ,where: {userId : userId}
+            ,cols: [[
+                {checkbox: true, fixed: true}
+                ,{field: 'userSerial', title: 'ID', width: 100,}/*hide: true*/
+                ,{field:'studentId', title:'ID', width:100,hide:true }/**/
+                ,{field:'phone',title:'手机号(帐号)',  width:150,minWidth: 80}
+                ,{field:'orgName',title:'所属企业(院校)',  width:150}
+                ,{field:'gradeName',title:'班级',  width:150,sort: true,}
+                ,{field:'sname',title:'学生姓名',  width:150,}
+                ,{field:'sex',title:'性别',  width:150,templet:'#sex'}
+                ,{field:'createBy',title:'创建人',  width:150,}
+                ,{field:'createTime',title:'创建时间',  width:500, sort: true, templet:'<div>{{ layui.util.toDateString(d.createTime, "yyyy-MM-dd") }}</div>'}
+                ,{field:'isDelete',title:'操作', templet:'#del',width:150, minWidth: 100,fixed:'right'}
+            ]]
+            ,id: 'testReload'
+            ,page: true
+
+        });
+
+        //监听单元格删除
+        table.on('tool(test)', function(obj) {  //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            let data = obj.data;   //获得当前行数据   //del = obj.event; //获得del对应的值
+            let userSerial = data["userSerial"];   //获取当前行的值
+            if (obj.event === "del") {
+                layer.confirm("你确定要禁用么？", {btn: ['确定', '取消']},
+                    function (index) {
+                        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                        layer.close(index);
+                        console.log(index);
+                        $.ajax({
+                            url: '/user/stopTeam',
+                            type: 'post',
+                            data: {'userSerial': userSerial},
+                            success: function (result) {
+                                if (result.code == 0000) {
+                                    layer.msg("已成功", {icon: 6});
+                                } else {
+                                    layer.msg("禁用失败", {icon: 5});
+                                }
+                            }
+                        });
+                    })
+            }
+        })
+
+            //监听单元格编辑
+            table.on('edit(test)',
+            function(obj) {
+                var value = obj.value //得到修改后的值
+                , data = obj.data //得到所在行所有键值
+                , field = obj.field; //得到字段
+                layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value);
+            });
+
+            //头工具栏事件
+            table.on('toolbar(test)',
+            function(obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                case 'getCheckData':
+                    var data = checkStatus.data;
+                    layer.alert(JSON.stringify(data));
+                    break;
+                case 'getCheckLength':
+                    var data = checkStatus.data;
+                    layer.msg('选中了：' + data.length + ' 个');
+                    break;
+                case 'isAll':
+                    layer.msg(checkStatus.isAll ? '全选': '未全选');
+                    break;
+                };
+            });
+        });
+
+         function addStudent(){
+             layer.open({
+                 type: 2,//类型
+                 title: '添加学生', //窗口名字
+                 maxmin: true,
+                 shade: 0.5,  //点击遮罩透明度
+                 area: ['30%', '50%'],  //定义宽和高 前面是宽，后面是高
+                 content: 'teacher-addStudent.html',
+             })
+         }
+    </script>
+
+    </body>
+</html>

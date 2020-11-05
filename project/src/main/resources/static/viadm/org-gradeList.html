@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>班级列表</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+        <link rel="stylesheet" href="../css/font.css" charset="utf-8">
+        <link rel="stylesheet" href="../css/xadmin.css" charset="utf-8">
+        <script type="text/javascript" src="../js/jquery-3.4.1.js"></script>
+        <script type="text/javascript" src="../lib/layui/layui.js"  charset="utf-8" ></script>
+        <script type="text/javascript" src="../js/xadmin.js"></script>
+        <!--[if lt IE 9]>-->
+          <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+          <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <!--<![endif]-->
+    </head>
+    
+    <body>
+        <div class="x-nav">
+            <span class="layui-breadcrumb">
+                <a href="">首页</a>
+                <a href="">班级管理</a>
+                <a><cite>班级列表</cite></a>
+                    
+            </span>
+        </div>
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body ">
+                            <!--<form class="layui-form layui-col-space5">
+                                <div class="layui-inline layui-show-xs-block">
+                                    <input class="layui-input" autocomplete="off" placeholder="开始日" name="start" id="start"></div>
+                                <div class="layui-inline layui-show-xs-block">
+                                    <input class="layui-input" autocomplete="off" placeholder="截止日" name="end" id="end"></div>
+                                <div class="layui-inline layui-show-xs-block">
+                                    <input type="text" name="username" placeholder="请输入用户名" autocomplete="off" class="layui-input"></div>
+                                <div class="layui-inline layui-show-xs-block">
+                                    <button class="layui-btn" lay-submit="" lay-filter="sreach">
+                                        <i class="layui-icon">&#xe615;</i></button>
+                                </div>
+                            </form>-->
+                        </div>
+                        <div class="layui-card-body ">
+                        	<div class="layui-card-header">                           	
+                            	<button class="layui-btn" onclick="xadmin.open('添加班级','./org-addGrade.html',400,300)"><i class="layui-icon"></i>添加班级</button>
+                                <button class="layui-btn layui-btn-small"  onclick="location.reload()" title="刷新"><i class="layui-icon layui-icon-refresh"></i></button>
+                            </div>
+                            <div ><input  type="hidden" id="orgId" name="orgId" value="" required="" lay-verify="" autocomplete="off" class="layui-input"></div>
+                            <div ><input  type="hidden" id="functionary" name="functionary" value="" required="" lay-verify="" autocomplete="off" class="layui-input"></div>
+                            <table id="gradeList" lay-filter="test"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    
+    
+   <!-- <script type="text/html" id="toolbarDemo">
+        <div class = "layui-btn-container" > 
+            <button class = "layui-btn layui-btn-sm" lay-event = "getCheckData" > 获取选中行数据 </button>
+            <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button > 
+            <button class = "layui-btn layui-btn-sm" lay-event = "isAll" > 验证是否全选</button>
+        </div > 
+    </script>-->
+     
+    <script type="text/html" id="barDemo">        
+    	<a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del" title="删除该班级">删除</a>
+        <a class="layui-btn  layui-btn-normal  layui-btn-xs" lay-event="addTeacher" title="为该班级添加教师">添加教师</a>
+    	<a class="layui-btn  layui-btn-warm  layui-btn-xs" lay-event="allTeacher" title="查看该班级的全部教师">查看教师</a>
+
+    </script>
+
+<script type="text/javascript" charset="utf-8">
+
+    layui.use(['laydate', 'form'], function() {
+        var laydate = layui.laydate;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#start' //指定元素
+        });
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#end' //指定元素
+        });
+    });
+
+    layui.use('table', function() {
+        var table = layui.table;
+        //监听表格复选框选择
+       /* table.on('checkbox(test)', function(obj){
+            console.log(obj)
+        });*/
+        let userId = JSON.parse(sessionStorage.getItem('userSession')).userId;
+        let functionary = JSON.parse(sessionStorage.getItem('userSession')).functionary;
+        $('#orgId').val(userId);   /*这里将获取到的orgId赋值到隐藏输入框里，添加班级对象的时候会附带orgId值*/
+        $('#functionary').val(functionary);
+        //$("#orgId").html(orgId);
+        table.render({
+            elem: '#gradeList'       /*表格的id选择器*/
+            ,url: '/grade/gradeList'
+            ,where: {userId:userId}
+            ,cols: [[
+                {checkbox: true, fixed: true}
+                ,{field:'gradeId', title:'ID', width:150, hide:true}
+                ,{field:'orgName',title:'机构(学校)',  width:200, minWidth: 80}
+                ,{field:'gradeName',title:'班级名',  edit: true,width:200, minWidth: 80,sort: true}
+                ,{field:'',title:'',  edit: true,width:900, minWidth: 80} /*排版设置空列*/
+                ,{field:'isDelete',title:'操作', templet:'#barDemo',width:300, minWidth: 100, fixed: 'right'}
+            ]]
+            ,id: 'testReload'
+            ,page: false
+
+        });
+
+
+ 
+        table.on('tool(test)', function(obj){  //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            let data = obj.data;   //获得当前行数据   //del = obj.event; //获得del对应的值
+            let gradeId = data["gradeId"];   //获取当前行的gradeId值
+            if(obj.event === "del"){
+                layer.confirm("你确定要删除么？删除班级请先解绑该班级下的学生",{btn:['确定','取消']},
+                    function(index){
+                        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                        layer.close(index);
+                        $.ajax({
+                            url:'/grade/delGrade',
+                            type:'get',
+                            data:{'gradeId':gradeId},//向服务端发送删除的id
+                            success:function(result){
+                                if(result.success==true){
+                                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                                    layer.close(index);
+                                    console.log(index);
+                                    layer.msg("删除成功",{icon:6});
+                                }
+                                else{
+                                    layer.msg("删除失败",{icon:5});
+                                }
+                            }
+                       });
+                })
+           }else if(obj.event === 'addTeacher') {
+                layer.open({
+                    type: 2,//类型
+                    title: '添加教师', //窗口名字
+                    maxmin: true,
+                    shade: 0.5,  //点击遮罩透明度
+                    area: ['20%', '35%'],  //定义宽和高 前面是宽，后面是高
+                    content: 'org-grade-addteacher.html?gradeId='+gradeId+'&userId='+userId,
+                })
+            }else if(obj.event === 'allTeacher') {
+                layer.open({
+                    type: 2,//类型
+                    title: '查看教师', //窗口名字
+                    maxmin: true,
+                    shade: 0.5,  //点击遮罩透明度
+                    area: ['32%', '45%'],  //定义宽和高 前面是宽，后面是高
+                    content: 'org_gradeteacherlist.html?gradeId='+gradeId,
+                })
+            }
+
+
+        });
+
+  
+        //监听单元格编辑
+        table.on('edit(test)',
+        function(obj) {
+            var value = obj.value //得到修改后的值
+            ,data = obj.data //得到所在行所有键值
+            ,field = obj.field; //得到字段
+            layer.msg('[ID: ' + data.id + '] ' + field.title + ' 字段更改为：' + value);
+        });
+
+       /* //头工具栏事件
+        table.on('toolbar(test)',
+        function(obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+            case 'getCheckData':
+                var data = checkStatus.data;
+                layer.alert(JSON.stringify(data));
+                break;
+            case 'getCheckLength':
+                var data = checkStatus.data;
+                layer.msg('选中了：' + data.length + ' 个');
+                break;
+            case 'isAll':
+                layer.msg(checkStatus.isAll ? '全选': '未全选');
+                break;
+            };
+        });*/
+
+
+    });
+    </script>
+        
+
+
+</html>

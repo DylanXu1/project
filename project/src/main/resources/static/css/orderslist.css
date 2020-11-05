@@ -1,0 +1,5 @@
+/*表单的行高*/
+.layui-table-cell{
+    height:60px;
+    line-height: 60px;
+}

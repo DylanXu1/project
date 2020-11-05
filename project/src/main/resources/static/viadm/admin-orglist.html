@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>欢迎页面-X-admin2.2</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+        <link rel="stylesheet" href="../css/font.css" charset="utf-8">
+        <link rel="stylesheet" href="../css/xadmin.css" charset="utf-8">
+        <script type="text/javascript" src="../js/jquery.min.js"></script>
+        <script type="text/javascript" src="../lib/layui/layui.js"  charset="utf-8" ></script>
+        <script type="text/javascript" src="../js/xadmin.js"></script>
+
+    </head>
+    
+    <body>
+        <div class="x-nav">
+            <span class="layui-breadcrumb">
+                <a href="">首页</a>
+                <a href="">人员管理</a>
+                <a><cite>企业列表</cite></a>
+                    
+            </span>
+        </div>
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body ">
+                        </div>
+                        <div class="layui-card-body ">
+                        	<div class="layui-card-header">                           	
+                            	<button class="layui-btn" onclick="xadmin.open('添加企业','./admin-addOrg.html',500,400)"><i class="layui-icon"></i>添加企业(院校)</button>
+                                <button class="layui-btn layui-btn-small"  onclick="location.reload()" title="刷新"><i class="layui-icon layui-icon-refresh"></i></button>
+                            </div>
+                            <table id="adminOrglist" lay-filter="test"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    
+    
+    <!--<script type="text/html" id="toolbarDemo">
+        <div class = "layui-btn-container" > 
+            <button class = "layui-btn layui-btn-sm" lay-event = "getCheckData" > 获取选中行数据 </button>
+            <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button > 
+            <button class = "layui-btn layui-btn-sm" lay-event = "isAll" > 验证是否全选</button>
+        </div > 
+    </script>-->
+     
+    <script type="text/html" id="del">        
+    	<a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">禁用</a>
+    </script>
+    
+    <script>
+    	layui.use(['laydate', 'form'],
+        function() {
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#start' //指定元素
+            });
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#end' //指定元素
+            });
+        });
+    </script>
+    
+<script>
+    layui.use('table', function() {
+    var table = layui.table;                    
+        //监听表格复选框选择
+    table.on('checkbox(test)', function(obj){
+        console.log(obj)    
+    });
+
+    let parentId = JSON.parse(sessionStorage.getItem('userSession')).parentId;
+    if(parentId!=1000){
+        layer.alert("请重新登录")
+    }
+    console.log(parentId);
+    table.render({
+        elem: '#adminOrglist'       /*表格的id选择器*/
+        , url: '/user/orgList'
+        , where: {parentId: parentId}   /*通过id判定身份*/
+        , cols: [[
+            {checkbox: true, fixed: true}
+            , {field: 'userSerial', title: 'ID', width: 150,}/* hide: true*/
+            , {field: 'phone', title: '手机号(帐号)', width: 150, minWidth: 80}
+            , {field: 'orgName', title: '所属企业(院校)', width: 250}
+            , {field: 'functionary', title: '机构联系人', width: 150}
+            , {field: 'createBy', title: '创建人', width: 150, edit: 'text'}
+            , {
+                field: 'createTime',
+                title: '创建时间',
+                width: 650,
+                sort: true,
+                templet: '<div>{{ layui.util.toDateString(d.createTime, "yyyy-MM-dd") }}</div>'
+            }
+            , {field: 'isDelete', title: '操作', templet: '#del', width: 200, minWidth: 100, fixed: 'right'}
+        ]]
+        , id: 'testReload'
+        , toolbar: '#toolbarDemo'
+        , page: true
+
+    });
+ 
+ 
+    table.on('tool(test)', function(obj){  //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+		let data = obj.data;   //获得当前行数据   //del = obj.event; //获得del对应的值
+        let userSerial = data["userSerial"];   //获取当前行的表头为orgId的值
+ 		if(obj.event === "del"){
+        	layer.confirm("你确定要禁用么？禁用企业将同时禁用该企业下的教师和学生",{btn:['确定','取消']},
+                function(index){
+                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    layer.close(index);
+              		$.ajax({
+                        url:'/user/stopTeam',
+                        type:'post',
+                        data:{'userSerial':userSerial},//向服务端发送删除的id
+                        success:function(result){                        	
+                            if(result.code==0000){
+                                obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                                layer.close(index);
+                                console.log(index);
+                                layer.msg("已禁用",{icon:6});
+                            }
+                            else{
+                                layer.msg("禁用失败",{icon:5});
+                            }
+                        }
+                   });                                
+            })
+       }
+    });       
+  
+            //监听单元格编辑
+            table.on('edit(test)',
+            function(obj) {
+                var value = obj.value //得到修改后的值
+                ,
+                data = obj.data //得到所在行所有键值
+                ,
+                field = obj.field; //得到字段
+                layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value);
+            });
+
+            //头工具栏事件
+            table.on('toolbar(test)',
+            function(obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                case 'getCheckData':
+                    var data = checkStatus.data;
+                    layer.alert(JSON.stringify(data));
+                    break;
+                case 'getCheckLength':
+                    var data = checkStatus.data;
+                    layer.msg('选中了：' + data.length + ' 个');
+                    break;
+                case 'isAll':
+                    layer.msg(checkStatus.isAll ? '全选': '未全选');
+                    break;
+                };
+            });
+        });
+    </script>
+    <script type="text/html" id="createTime">
+        <div>{{ layui.util.toDateString(d.createTime, "yyyy-MM-dd") }}</div>
+    </script>
+
+</html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+		<!DOCTYPE mapper
+				PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+				"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chains.project.mapper.ImageMapper">
+
+	<!--向项目添加图片url到DB-->
+	<insert id="addImage" parameterType="Image">
+		insert into image (item_id,img_add,img_type,create_time,is_delete)
+		values (#{itemId},#{imgAdd},#{imgType},now(),0)
+	</insert>
+
+
+</mapper>

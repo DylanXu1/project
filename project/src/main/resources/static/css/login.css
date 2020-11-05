@@ -1,0 +1,81 @@
+
+.login_bg{
+    margin:20px 0px;
+    height: 200px;
+    /*border: 0.1px solid #D0D0D0;*/
+}
+.login_bg .login{
+    margin: 50px auto ;
+    width: 950px;
+    height: 400px;
+    background-color: #16202D;
+    border-radius: 8px;
+    box-shadow: 2px 2px 5px #26487F;  /*悬浮效果*/
+   /* white-space: nowrap;*/
+}
+.login_bg .create{
+    margin: 50px auto ;
+    width: 900px;
+    height: 800px;
+    background-color: #16202D;
+    border-radius: 8px;
+   /* box-shadow: 2px 2px 5px #26487F;  !*悬浮效果*!*/
+    /* white-space: nowrap;*/
+}
+.login_bg .login .lo_login{
+    margin: 5px 20px;
+    padding: 5px;
+    /*border: 0.1px solid #D0D0D0;*/
+    float: left;
+    width: 400px;
+    height: 230px;
+}
+.login_bg .login .ver_line{
+    margin: 10px 0px;
+    float: left;
+    width: 1px;
+    height: 230px;
+    border: 0.1px solid #26487F;
+}
+.lo_login .lo_title{
+   /* vertical-align:18px;*/ /*修改文字重心的位置*/
+    font-size: 18px;
+    color: #FFFFFF;
+}
+.lo_hint{
+    /*vertical-align:8px;*/
+    font-size: 12px;
+    color: #FFFFFF;
+}
+.lo_input{
+   /* vertical-align:18px;*/
+    width: 300px;
+    height: 30px;
+    margin: 5px auto 2px auto;
+    border: 1px solid #26487F;
+    border-radius: 4px;
+    background: #16202D;
+    color: #FFFFFF;
+   /* transition: border-color ease-in-out .15s,box-shasow ease-in-out .15s;*/
+}
+.lo_login .lo_bu{
+    margin: 80px auto auto 100px;
+    width: 60px;
+    height: 30px;
+    border-radius: 4px;
+    border: #1b2838;
+    background: #00ACED;
+    color: #1b2838;
+}
+
+.login_bg .login .lo_create{
+    margin:0 auto;
+    border: 1px solid #C4C4C4;
+    width: 300px;
+    height: 500px;
+}
+.login_bg .lo_create .cr_title{
+    margin: 20px auto auto auto ;
+    color: #FFFFFF;
+    font-size: 24px;
+}
